@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Profile = require('../models/profile');
+const Profile = require('../models/domesticHelperSchema');
 
 // Add Profile
 router.post('/', (req, res) => {
