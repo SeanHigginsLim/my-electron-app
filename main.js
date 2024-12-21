@@ -21,10 +21,9 @@ function createWindow() {
     mainWindow.loadFile(path.join(__dirname, 'views', 'index.html'))
         .catch(err => console.error('Failed to load index.html:', err));
     mainWindow.maximize();
-    // mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
 }
 
-app.on('ready', createWindow);
 app.on('ready', createWindow);
 
 app.on('window-all-closed', () => {
