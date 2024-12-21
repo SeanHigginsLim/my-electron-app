@@ -1,0 +1,16 @@
+appId: com.example.electron-mongodb-app
+productName: ElectronMongoDBApp
+directories:
+  output: dist
+files:
+  - from: ./
+    filter:
+      - package.json
+      - main.js
+      - preload.js
+      - index.html
+      - renderer.js
+      - server.js
+      - routes/
+      - models/
+      - controllers/
