@@ -17,7 +17,6 @@ function createWindow() {
             devTools: true
         }
     });
-    });
 
     mainWindow.loadFile(path.join(__dirname, 'views', 'index.html'))
         .catch(err => console.error('Failed to load index.html:', err));
@@ -29,10 +28,6 @@ app.on('ready', createWindow);
 app.on('ready', createWindow);
 
 app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
-        app.quit();
-    }
-});
     if (process.platform !== 'darwin') {
         app.quit();
     }
