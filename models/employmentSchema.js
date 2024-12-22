@@ -1,30 +1,32 @@
 const mongoose = require('mongoose');
+const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 // Create a new employment object for the domestic helper or skilled worker to use.
 const employmentSchema = new mongoose.Schema({
     employmentID: {
         type: Number,
-        required: true,
-        unique: true
+        required: true
     },
     country: {
         type: String,
-        required: true
+        // required: true
     },
     workingPeriod: {
         type: String,
-        required: true
+        // required: true
     },
     date: {
         type: Date,
-        required: true
+        // required: true
     },
     workDescription: {
         type: String,
-        required: true
+        // required: true
     },
-});
+}, { timestamps: true });
 
 // const Employment = mongoose.model('Employment', employmentSchema);
+
+employmentSchema.plugin(AutoIncrement, { id: 'employment_seq', inc_field: 'employmentID' });
 
 module.exports = employmentSchema;

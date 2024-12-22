@@ -18,7 +18,7 @@ function createWindow() {
         }
     });
 
-    mainWindow.loadFile(path.join(__dirname, 'views', 'index.html'))
+    mainWindow.loadFile(path.join(__dirname, 'views', 'homepage.html'))
         .catch(err => console.error('Failed to load index.html:', err));
     mainWindow.maximize();
     mainWindow.webContents.openDevTools();
@@ -35,6 +35,17 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
         createWindow();
+    }
+});
+
+// Handle fetching all domestic helpers
+ipcMain.handle('getAllDomesticHelpers', async () => {
+    try {
+        const response = await axios.get('http://localhost:3000/api/domesticHelpers');
+        return response.data; // Return the helpers data to the renderer
+    } catch (error) {
+        console.error('Error fetching domestic helpers:', error);
+        throw error;
     }
 });
 

@@ -5,6 +5,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld('electronAPI', {
     loadPage: (page) => ipcRenderer.invoke('load-page', page),
     createDomesticHelper: (helper) => ipcRenderer.invoke('create-domestic-helper', helper),
+    getAllDomesticHelpers: () => ipcRenderer.invoke('getAllDomesticHelpers'),
     updateDomesticHelper: (helper) => ipcRenderer.invoke('update-domestic-helper', helper),
     deleteDomesticHelper: (helperId) => ipcRenderer.invoke('delete-domestic-helper', helperId),
     createSkilledWorker: (worker) => ipcRenderer.invoke('create-skilled-worker', worker),

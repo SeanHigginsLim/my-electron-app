@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const AutoIncrement = require('mongoose-sequence')(mongoose);
+
 const childSchema = require('./childSchema');
 const employmentSchema = require('./employmentSchema');
 
@@ -237,7 +239,9 @@ const skilledWorkerSchema = new mongoose.Schema({
         type: String,
         required: true
     }
-});
+}, { timestamps: true });
+
+skilledWorkerSchema.plugin(AutoIncrement, { id: 'worker_seq', inc_field: 'workerID' });
 
 const SkilledWorker = mongoose.model('SkilledWorker', skilledWorkerSchema);
 

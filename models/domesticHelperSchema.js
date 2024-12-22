@@ -1,284 +1,96 @@
 const mongoose = require('mongoose');
+const AutoIncrement = require('mongoose-sequence')(mongoose);
+
 const childSchema = require('./childSchema');
 const employmentSchema = require('./employmentSchema');
 
 // Create a new domestic helper object.
 const domesticHelperSchema = new mongoose.Schema({
-    //uncomment all required when done
     helperID: {
         type: Number,
-        // required: true,
         unique: true
     },
-    lName: {
-        type: String,
-        // required: true
-    },
-    fName: {
-        type: String,
-        // required: true
-    },
-    mInitial: {
-        type: String,
-        // required: true
-    },
-    position: {
-        type: String,
-        // required: true
-    },
-    destination: {
-        type: String,
-        // required: true
-    },
-    address: {
-        type: String,
-        // required: true
-    },
-    telephoneNumber: {
-        type: Number,
-        // required: true
-    },
-    dateOfBirth: {
-        type: Date,
-        // required: true
-    },
-    age: {
-        type: Number,
-        // required: true
-    },
-    placeOfBirth: {
-        type: String,
-        // required: true
-    },
-    nationality: {
-        type: String,
-        // required: true
-    },
-    civilStatus: {
-        type: String,
-        // required: true
-    },
-    height: {
-        type: Number,
-        // required: true
-    },
-    weightFeet: {
-        type: Number,
-        // required: true
-    },
-    weightInches: {
-        type: Number,
-        // required: true
-    },
-    sicknessRecord: {
-        type: String,
-        // required: true
-    },
-    religion: {
-        type: String,
-        // required: true
-    },
-    fatherLName: {
-        type: String,
-        // required: true
-    },
-    fatherFName: {
-        type: String,
-        // required: true
-    },
-    fatherMInitial: {
-        type: String,
-        // required: true
-    },
-    fatherDateOfBirth: {
-        type: Date,
-        // required: true
-    },
-    motherLName: {
-        type: String,
-        // required: true
-    },
-    motherFName: {
-        type: String,
-        // required: true
-    },
-    motherMInitial: {
-        type: String,
-        // required: true
-    },
-    motherDateOfBirth: {
-        type: Date,
-        // required: true
-    },
-    spouseLName: {
-        type: String,
-        // required: true
-    },
-    spouseFName: {
-        type: String,
-        // required: true
-    },
-    spouseMInitial: {
-        type: String,
-        // required: true
-    },
-    spouseDateOfBirth: {
-        type: Date,
-        // required: true
-    },
-    contactPersonLName: {
-        type: String,
-        // required: true
-    },
-    contactPersonFName: {
-        type: String,
-        // required: true
-    },
-    contactPersonMInitial: {
-        type: String,
-        // required: true
-    },
-    contactPersonAddress: {
-        type: String,
-        // required: true
-    },
-    contactPersonContactNumber: {
-        type: Number,
-        // required: true
-    },
-    contactPersonRelationshipWithHelper: {
-        type: String,
-        // required: true
-    },
+    lName: { type: String },
+    fName: { type: String },
+    mInitial: { type: String },
+    position: { type: String },
+    destination: { type: String },
+    address: { type: String },
+    telephoneNumber: { type: Number },
+    dateOfBirth: { type: Date },
+    age: { type: Number },
+    placeOfBirth: { type: String },
+    nationality: { type: String },
+    civilStatus: { type: String },
+    height: { type: Number },
+    weightFeet: { type: Number },
+    weightInches: { type: Number },
+    sicknessRecord: { type: String },
+    religion: { type: String },
+    fatherLName: { type: String },
+    fatherFName: { type: String },
+    fatherMInitial: { type: String },
+    fatherDateOfBirth: { type: Date },
+    motherLName: { type: String },
+    motherFName: { type: String },
+    motherMInitial: { type: String },
+    motherDateOfBirth: { type: Date },
+    spouseLName: { type: String },
+    spouseFName: { type: String },
+    spouseMInitial: { type: String },
+    spouseDateOfBirth: { type: Date },
+    contactPersonLName: { type: String },
+    contactPersonFName: { type: String },
+    contactPersonMInitial: { type: String },
+    contactPersonAddress: { type: String },
+    contactPersonContactNumber: { type: Number },
+    contactPersonRelationshipWithHelper: { type: String },
     children: { 
-        type: [childSchema],
-        default: []
+        type: [childSchema], 
+        default: [] 
     },
-    passportNumber: {
-        type: String,
-        // required: true
-    },
-    passportDateOfIssue: {
-        type: Date,
-        // required: true
-    },
-    passportDateOfExpiry: {
-        type: Date,
-        // required: true
-    },
-    passportPlaceOfIssue: {
-        type: String,
-        // required: true
-    },
-    nameOfSchool: {
-        type: String,
-        // required: true
-    },
-    courseTaken: {
-        type: String,
-        // required: true
-    },
-    yearGraduated: {
-        type: Number,
-        // required: true
-    },
+    passportNumber: { type: String },
+    passportDateOfIssue: { type: Date },
+    passportDateOfExpiry: { type: Date },
+    passportPlaceOfIssue: { type: String },
+    nameOfSchool: { type: String },
+    courseTaken: { type: String },
+    yearGraduated: { type: Number },
     employments: { 
         type: [employmentSchema], 
-        default: []
-    },
-    englishSpeaking: {
-        type: Boolean,
-        // required: true
-    },
-    englishReading: {
-        type: Boolean,
-        // required: true
-    },
-    englishWriting: {
-        type: Boolean,
-        // required: true
-    },
-    arabicSpeaking: {
-        type: Boolean,
-        // required: true
-    },
-    arabicReading: {
-        type: Boolean,
-        // required: true
-    },
-    arabicWriting: {
-        type: Boolean,
-        // required: true
-    },
-    filipinoSpeaking: {
-        type: Boolean,
-        // required: true
-    },
-    filipinoReading: {
-        type: Boolean,
-        // required: true
-    },
-    filipinoWriting: {
-        type: Boolean,
-        // required: true
-    },
-    otherLanguageSpeaking: {
-        type: Boolean,
-        // required: true
-    },
-    otherLanguageReading: {
-        type: Boolean,
-        // required: true
-    },
-    otherLanguageWriting: {
-        type: Boolean,
-        // required: true
-    },
-    babySitting: {
-        type: Boolean,
-        // required: true
-    },
-    ironing: {
-        type: Boolean,
-        // required: true
-    },
-    childrenCare: {
-        type: Boolean,
-        // required: true
-    },
-    cooking: {
-        type: Boolean,
-        // required: true
-    },
-    tutoring: {
-        type: Boolean,
-        // required: true
-    },
-    arabicCooking: {
-        type: Boolean,
-        // required: true
-    },
-    disabledCare: {
-        type: Boolean,
-        // required: true
-    },
-    sewing: {
-        type: Boolean,
-        // required: true
-    },
-    cleaning: {
-        type: Boolean,
-        // required: true
-    },
-    computer: {
-        type: Boolean,
-        // required: true
-    }
-});
+        default: [] 
+    },  
+    englishSpeaking: { type: Boolean },
+    englishReading: { type: Boolean },
+    englishWriting: { type: Boolean },
+    arabicSpeaking: { type: Boolean },
+    arabicReading: { type: Boolean },
+    arabicWriting: { type: Boolean },
+    filipinoSpeaking: { type: Boolean },
+    filipinoReading: { type: Boolean },
+    filipinoWriting: { type: Boolean },
+    otherLanguageSpeaking: { type: Boolean },
+    otherLanguageReading: { type: Boolean },
+    otherLanguageWriting: { type: Boolean },
+    babySitting: { type: Boolean },
+    ironing: { type: Boolean },
+    childrenCare: { type: Boolean },
+    cooking: { type: Boolean },
+    tutoring: { type: Boolean },
+    arabicCooking: { type: Boolean },
+    disabledCare: { type: Boolean },
+    sewing: { type: Boolean },
+    cleaning: { type: Boolean },
+    computer: { type: Boolean }
+}, { timestamps: true });
+
+// Apply AutoIncrement for `helperID`
+domesticHelperSchema.plugin(AutoIncrement, { id: 'helper_seq', inc_field: 'helperID' });
 
 const DomesticHelper = mongoose.model('DomesticHelper', domesticHelperSchema);
 
 module.exports = DomesticHelper;
+
 
 // helperID: {
     //     type: Number,

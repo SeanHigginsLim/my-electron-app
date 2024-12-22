@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Domestic Helpers</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Domestic Helpers</h1>
+
+<!-- Table to display the domestic helpers -->
+<table id="helpers-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody id="helpers-list">
+        <!-- Dynamic rows will be added here -->
+    </tbody>
+</table>
+
+<script>
+    // Fetch the list of domestic helpers when the page loads
+    window.onload = () => {
+        fetchDomesticHelpers();
+    };
+
+    // Function to fetch domestic helpers from the server
+    const fetchDomesticHelpers = async () => {
+        try {
+            // Use ipcRenderer to get data from main process (Electron)
+            const helpers = await window.electronAPI.getAllDomesticHelpers();
+            console.log(helpers)
+            displayHelpers(helpers);
+        } catch (error) {
+            console.error('Error fetching domestic helpers:', error);
+        }
+    };
+
+    // Function to display the domestic helpers in the table
+    const displayHelpers = (helpers) => {
+        const helpersList = document.getElementById('helpers-list');
+        helpersList.innerHTML = ''; // Clear existing rows
+
+        helpers.forEach(helper => {
+            const row = document.createElement('tr');
+            const childrenDetails = helper.children
+                .map(child => `(Name: ${child.fName} ${child.mInitial} ${child.lName}) (Age: ${child.age}) (Date of Birth: ${child.dateOfBirth})`) // Format child details
+                .join(', '); // Combine child details into a string
+
+            row.innerHTML = `
+                <td>${helper.lName}</td>
+                <td>${helper.fName}</td>
+                <td>${helper.mInitial}</td>
+                <td>${helper.position}</td>
+                <td>${helper.destination}</td>
+                <td>${helper.address}</td>
+                <td>${helper.telephoneNumber}</td>
+                <td>${helper.dateOfBirth}</td>
+                <td>${helper.age}</td>
+                <td>${helper.placeOfBirth}</td>
+                <td>${helper.nationality}</td>
+                <td>${helper.civilStatus}</td>
+                <td>${helper.height}</td>
+                <td>${helper.weightFeet}</td>
+                <td>${helper.weightInches}</td>
+                <td>${helper.sicknessRecord}</td>
+                <td>${helper.religion}</td>
+                <td>${helper.fatherLName}</td>
+                <td>${helper.fatherFName}</td>
+                <td>${helper.fatherMInitial}</td>
+                <td>${helper.fatherDateOfBirth}</td>
+                <td>${helper.motherLName}</td>
+                <td>${helper.motherFName}</td>
+                <td>${helper.motherMInitial}</td>
+                <td>${helper.motherDateOfBirth}</td>
+                <td>${helper.spouseLName}</td>
+                <td>${helper.spouseFName}</td>
+                <td>${helper.spouseMInitial}</td>
+                <td>${helper.spouseDateOfBirth}</td>
+                <td>${helper.contactPersonLName}</td>
+                <td>${helper.contactPersonFName}</td>
+                <td>${helper.contactPersonMInitial}</td>
+                <td>${helper.contactPersonAddress}</td>
+                <td>${helper.contactPersonContactNumber}</td>
+                <td>${helper.contactPersonRelationshipWithHelper}</td>
+                <td>${childrenDetails}</td>
+                <td>${helper.passportNumber}</td>
+                <td>${helper.passportDateOfIssue}</td>
+                <td>${helper.passportDateOfExpiry}</td>
+                <td>${helper.passportPlaceOfIssue}</td>
+                <td>${helper.nameOfSchool}</td>
+                <td>${helper.courseTaken}</td>
+                <td>${helper.yearGraduated}</td>
+                <td>${helper.employments}</td>
+                <td>${helper.englishSpeaking}</td>
+                <td>${helper.englishReading}</td>
+                <td>${helper.englishWriting}</td>
+                <td>${helper.arabicSpeaking}</td>
+                <td>${helper.arabicReading}</td>
+                <td>${helper.arabicWriting}</td>
+                <td>${helper.filipinoSpeaking}</td>
+                <td>${helper.filipinoReading}</td>
+                <td>${helper.filipinoWriting}</td>
+                <td>${helper.otherLanguageSpeaking}</td>
+                <td>${helper.otherLanguageReading}</td>
+                <td>${helper.otherLanguageWriting}</td>
+                <td>${helper.babySitting}</td>
+                <td>${helper.ironing}</td>
+                <td>${helper.childrenCare}</td>
+                <td>${helper.cooking}</td>
+                <td>${helper.tutoring}</td>
+                <td>${helper.arabicCooking}</td>
+                <td>${helper.disabledCare}</td>
+                <td>${helper.sewing}</td>
+                <td>${helper.cleaning}</td>
+                <td>${helper.computer}</td>
+                
+                <td>
+                    <button onclick="viewHelper('${helper._id}')">View</button>
+                    <button onclick="deleteHelper('${helper._id}')">Delete</button>
+                </td>
+            `;
+            helpersList.appendChild(row);
+        });
+    };
+
+    // Function to view a specific domestic helper's details (optional)
+    const viewHelper = async (id) => {
+        try {
+            const helper = await window.electronAPI.getDomesticHelper(id);
+            console.log('Helper Details:', helper);
+            // You can implement displaying the helper details here
+        } catch (error) {
+            console.error('Error fetching helper details:', error);
+        }
+    };
+
+    // Function to delete a domestic helper
+    const deleteHelper = async (id) => {
+        try {
+            await window.electronAPI.deleteDomesticHelper(id);
+            alert('Domestic helper deleted!');
+            fetchDomesticHelpers(); // Refresh the list
+        } catch (error) {
+            console.error('Error deleting helper:', error);
+        }
+    };
+</script>
+
+</body>
+</html>

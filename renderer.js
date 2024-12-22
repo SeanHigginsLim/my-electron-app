@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+    
     // Add event listeners for navigation buttons
     document.querySelectorAll('button[data-navigate]').forEach((button) => {
         button.addEventListener('click', async (event) => {
@@ -31,14 +32,163 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    document.getElementById('add-child-btn').addEventListener('click', () => {
+        const childContainer = document.getElementById('children-container');
+        const childIndex = childContainer.children.length;
+
+        // Create new child entry fields
+        const childEntry = document.createElement('div');
+        childEntry.classList.add('child-entry');
+        childEntry.innerHTML = `
+            <h3>Child ${childIndex + 1}</h3>
+            <input type="text" id="child-${childIndex}-lName" name="children[${childIndex}].lName" placeholder="Last Name">
+            <input type="text" id="child-${childIndex}-fName" name="children[${childIndex}].fName" placeholder="First Name">
+            <input type="text" id="child-${childIndex}-mInitial" name="children[${childIndex}].mInitial" placeholder="Middle Initial">
+            <input type="number" id="child-${childIndex}-age" name="children[${childIndex}].age" placeholder="Age">
+            <input type="date" id="child-${childIndex}-dateOfBirth" name="children[${childIndex}].dateOfBirth" placeholder="Date of Birth">
+            <button type="button" class="remove-child-btn">Remove Child</button>
+        `;
+        childContainer.appendChild(childEntry);
+
+        // Add event listener to remove button
+        childEntry.querySelector('.remove-child-btn').addEventListener('click', () => {
+            childContainer.removeChild(childEntry);
+        });
+    });
+
+    document.getElementById('add-employment-btn').addEventListener('click', () => {
+        const employmentContainer = document.getElementById('employments-container');
+            const employmentIndex = employmentContainer.children.length;
+
+            // Create new child entry fields
+            const employmentEntry = document.createElement('div');
+            employmentEntry.classList.add('employment-entry');
+            employmentEntry.innerHTML = `
+                <h3>Employment ${employmentIndex + 1}</h3>
+                <input type="text" id="employment-${employmentIndex}-country" name="employments[${employmentIndex}].country" placeholder="Country">
+                <input type="text" id="employment-${employmentIndex}-workingPeriod" name="employments[${employmentIndex}].workingPeriod" placeholder="Working Period">
+                <input type="text" id="employment-${employmentIndex}-date" name="employments[${employmentIndex}].date" placeholder="Date">
+                <input type="number" id="employment-${employmentIndex}-workDescription" name="employments[${employmentIndex}].workDescription" placeholder="Work Description">
+                <button type="button" class="remove-employment-btn">Remove Employment</button>
+            `;
+            employmentContainer.appendChild(employmentEntry);
+
+            // Add event listener to remove button
+            employmentEntry.querySelector('.remove-employment-btn').addEventListener('click', () => {
+                employmentContainer.removeChild(employmentEntry);
+            });
+    });
+
     // Handle form submissions
-    const domesticHelperForm = document.getElementById('create-domestic-helper-form');
-    if (domesticHelperForm) {
-        domesticHelperForm.addEventListener('submit', async (event) => {
+    const createDomesticHelperForm = document.getElementById('create-domestic-helper-form');
+    if (createDomesticHelperForm) {
+        createDomesticHelperForm.addEventListener('submit', async (event) => {
             event.preventDefault();
 
             // Extract form data
-            const domesticHelperFormData = new FormData(domesticHelperForm);
+            const domesticHelperFormData = new FormData(createDomesticHelperForm);
+            const helper = Object.fromEntries(domesticHelperFormData.entries());
+
+            // Convert specific fields to the correct types
+            helper.telephoneNumber = Number(helper.telephoneNumber);
+            helper.dateOfBirth = new Date(helper.dateOfBirth);
+            helper.age = Number(helper.age);
+            helper.height = Number(helper.height);
+            helper.weightFeet = Number(helper.weightFeet);
+            helper.weightInches = Number(helper.weightInches);
+            helper.fatherDateOfBirth = new Date(helper.fatherDateOfBirth);
+            helper.motherDateOfBirth = new Date(helper.motherDateOfBirth);
+            helper.spouseDateOfBirth = new Date(helper.spouseDateOfBirth);
+            helper.contactPersonContactNumber = Number(helper.contactPersonContactNumber);
+            // helper.children = Number(helper.telephoneNumber);
+            helper.passportDateOfIssue = new Date(helper.passportDateOfIssue);
+            helper.passportDateOfExpiry = new Date(helper.passportDateOfExpiry);
+            helper.yearGraduated = Number(helper.yearGraduated);
+            // helper.employments = Number(helper.telephoneNumber);
+            const childrenData = [];
+            const childCount = document.querySelectorAll('.child-entry').length;
+            const employmentsData = [];
+            const employmentCount = document.querySelectorAll('.employment-entry').length;
+
+            for (let i = 0; i < childCount; i++) {
+                const child = {
+                    childID: i + 1,
+                    lName: document.querySelector(`#child-${i}-lName`).value,
+                    fName: document.querySelector(`#child-${i}-fName`).value,
+                    mInitial: document.querySelector(`#child-${i}-mInitial`).value,
+                    age: Number(document.querySelector(`#child-${i}-age`).value),
+                    dateOfBirth: new Date(document.querySelector(`#child-${i}-dateOfBirth`).value)
+                };
+                childrenData.push(child);
+            }
+
+            for (let i = 0; i < employmentCount; i++) {
+                const employment = {
+                    employmentID: i + 1,
+                    country: document.querySelector(`#employment-${i}-country`).value,
+                    workingPeriod: document.querySelector(`#employment-${i}-workingPeriod`).value,
+                    date: document.querySelector(`#employment-${i}-date`).value,
+                    workDescription: Number(document.querySelector(`#employment-${i}-workDescription`).value)
+                };
+                employmentsData.push(employment);
+            }
+            console.log("children data: ", childrenData);
+            console.log("employments data: ", employmentsData);
+    
+            helper.children = childrenData;
+            helper.employments = employmentsData
+
+            try {
+                const createdHelper = await window.electronAPI.createDomesticHelper(helper);
+                console.log('Domestic helper created:', createdHelper.children);
+            } catch (error) {
+                console.error('Error creating domestic helper:', error);
+            }
+        });
+    }
+
+    const createSkilledWorkerForm = document.getElementById('create-skilled-worker-form');
+    if (createSkilledWorkerForm) {
+        createSkilledWorkerForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            // Extract form data
+            const skilledWorkerFormData = new FormData(createSkilledWorkerForm);
+            const worker = Object.fromEntries(skilledWorkerFormData.entries());
+
+            // Convert specific fields to the correct types
+            worker.telephoneNumber = Number(worker.telephoneNumber);
+            worker.dateOfBirth = new Date(worker.dateOfBirth);
+            worker.age = Number(worker.age);
+            worker.height = Number(worker.height);
+            worker.weightFeet = Number(worker.weightFeet);
+            worker.weightInches = Number(worker.weightInches);
+            worker.fatherDateOfBirth = new Date(worker.fatherDateOfBirth);
+            worker.motherDateOfBirth = new Date(worker.motherDateOfBirth);
+            worker.spouseDateOfBirth = new Date(worker.spouseDateOfBirth);
+            worker.contactPersonContactNumber = Number(worker.contactPersonContactNumber);
+            // worker.children = Number(worker.telephoneNumber);
+            worker.passportDateOfIssue = new Date(worker.passportDateOfIssue);
+            worker.passportDateOfExpiry = new Date(worker.passportDateOfExpiry);
+            worker.yearGraduated = Number(worker.yearGraduated);
+            // worker.employments = Number(worker.telephoneNumber);
+
+            try {
+                const createdWorker = await window.electronAPI.createSkilledWorker(worker);
+                console.log('Skilled worker created:', createdWorker);
+            } catch (error) {
+                console.error('Error creating skilled worker:', error);
+            }
+        });
+    }
+
+    const updateDomesticHelperForm = document.getElementById('update-domestic-helper-form');
+    if (updateDomesticHelperForm) {
+        updateDomesticHelperForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            // Extract form data
+            const domesticHelperFormData = new FormData(updateDomesticHelperForm);
             const helper = Object.fromEntries(domesticHelperFormData.entries());
 
             // Convert specific fields to the correct types
@@ -59,30 +209,43 @@ document.addEventListener('DOMContentLoaded', () => {
             // helper.employments = Number(helper.telephoneNumber);
 
             try {
-                const createdHelper = await window.electronAPI.createDomesticHelper(helper);
-                console.log('Domestic helper created:', createdHelper);
+                const updatedHelper = await window.electronAPI.updateDomesticHelper(helper);
+                console.log('Domestic helper updated:', updatedHelper);
             } catch (error) {
-                console.error('Error creating domestic helper:', error);
+                console.error('Error updating domestic helper:', error);
             }
         });
     }
 
-    const skilledWorkerForm = document.getElementById('create-skilled-worker-form');
-    if (skilledWorkerForm) {
-        skilledWorkerForm.addEventListener('submit', async (event) => {
+    const updateSkilledWorkerForm = document.getElementById('update-skilled-worker-form');
+    if (updateSkilledWorkerForm) {
+        updateSkilledWorkerForm.addEventListener('submit', async (event) => {
             event.preventDefault();
 
             // Extract form data
-            const skilledWorkerFormData = new FormData(skilledWorkerForm);
+            const skilledWorkerFormData = new FormData(updateSkilledWorkerForm);
             const worker = Object.fromEntries(skilledWorkerFormData.entries());
 
             // Convert specific fields to the correct types
             worker.telephoneNumber = Number(worker.telephoneNumber);
-            worker.dateOfBirth = new Date(worker.dateOfBirth).toISOString();
+            worker.dateOfBirth = new Date(worker.dateOfBirth);
+            worker.age = Number(worker.age);
+            worker.height = Number(worker.height);
+            worker.weightFeet = Number(worker.weightFeet);
+            worker.weightInches = Number(worker.weightInches);
+            worker.fatherDateOfBirth = new Date(worker.fatherDateOfBirth);
+            worker.motherDateOfBirth = new Date(worker.motherDateOfBirth);
+            worker.spouseDateOfBirth = new Date(worker.spouseDateOfBirth);
+            worker.contactPersonContactNumber = Number(worker.contactPersonContactNumber);
+            // worker.children = Number(worker.telephoneNumber);
+            worker.passportDateOfIssue = new Date(worker.passportDateOfIssue);
+            worker.passportDateOfExpiry = new Date(worker.passportDateOfExpiry);
+            worker.yearGraduated = Number(worker.yearGraduated);
+            // worker.employments = Number(worker.telephoneNumber);
 
             try {
-                const createdWorker = await window.electronAPI.createDomesticHelper(worker);
-                console.log('Skilled worker created:', createdWorker);
+                const updatedWorker = await window.electronAPI.updateSkilledWorker(worker);
+                console.log('Skilled worker created:', updatedWorker);
             } catch (error) {
                 console.error('Error creating skilled worker:', error);
             }
