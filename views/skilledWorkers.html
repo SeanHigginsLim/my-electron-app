@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skilled Workers</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .edit-button {
+            cursor: pointer;
+            color: blue;
+            text-decoration: underline;
+        }
+        .delete-button {
+            cursor: pointer;
+            color: red;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Skilled Workers</h1>
+
+<!-- Table to display the skilled workers -->
+<table id="workers-table">
+    <thead>
+        <tr>
+            <!-- Dynamic headers will be added here -->
+        </tr>
+    </thead>
+    <tbody id="workers-list">
+        <!-- Dynamic rows will be added here -->
+    </tbody>
+</table>
+
+<script>
+    // Worker fields to include
+    const fields = [
+        'lName', 'fName', 'mInitial'
+    ];
+
+    // Add headers dynamically
+    const tableHeadRow = document.querySelector('#workers-table thead tr');
+    fields.forEach(field => {
+        const th = document.createElement('th');
+        th.textContent = field.replace(/([A-Z])/g, ' $1').replace(/^\w/, c => c.toUpperCase());
+        tableHeadRow.appendChild(th);
+    });
+    tableHeadRow.appendChild(document.createElement('th')).textContent = 'Actions';
+
+    // Fetch and display data
+    window.onload = () => {
+        fetchSkilledWorkers();
+    };
+
+    const fetchSkilledWorkers = async () => {
+        try {
+            const workers = await window.electronAPI.getAllSkilledWorkers();
+            displayWorkers(workers);
+        } catch (error) {
+            console.error('Error fetching skilled workers:', error);
+        }
+    };
+
+    const displayWorkers = (workers) => {
+        const workersList = document.getElementById('workers-list');
+        workersList.innerHTML = '';
+
+        // If workerss is not an array (i.e., a single object), convert it into an array
+        if (!Array.isArray(workers)) {
+            workers = [workers]; // Wrap the single object into an array
+        }
+        
+        workers.forEach(worker => {
+            const row = document.createElement('tr');
+            fields.forEach(field => {
+                const cell = document.createElement('td');
+                if (field === 'children') {
+                    cell.innerHTML = (worker.children || []).map(child => `
+                        Name: ${child.fName} ${child.mInitial || ''} ${child.lName}, 
+                        Age: ${child.age}, DOB: ${child.dateOfBirth}`).join('<br>') || 'No Children';
+                } else {
+                    cell.textContent = worker[field] || 'N/A';
+                }
+                cell.contentEditable = false; // Fields are not editable by default
+                row.appendChild(cell);
+            });
+
+            // Add action buttons
+            const actionsCell = document.createElement('td');
+
+            // View Button
+            const viewButton = document.createElement('button');
+            viewButton.textContent = 'View';
+            viewButton.className = 'view-button';
+            viewButton.onclick = () => viewWorker(worker._id, row);
+            actionsCell.appendChild(viewButton)
+
+            // // Edit Button
+            // const editButton = document.createElement('button');
+            // editButton.textContent = 'Edit';
+            // editButton.className = 'edit-button';
+            // editButton.onclick = () => toggleEdit(row, worker._id, editButton);
+            // actionsCell.appendChild(editButton);
+
+            // // Delete Button
+            // const deleteButton = document.createElement('button');
+            // deleteButton.textContent = 'Delete';
+            // deleteButton.className = 'delete-button';
+            // deleteButton.onclick = () => deleteWorker(worker._id, row);
+            // actionsCell.appendChild(deleteButton);
+
+            row.appendChild(actionsCell);
+            workersList.appendChild(row);
+        });
+    };
+
+    const viewWorker = async (id, row) => {
+        try {
+            await window.electronAPI.viewWorker(id); // Backend delete call
+            // alert('Worker deleted successfully!');
+            // row.remove(); // Remove row from table
+        } catch (error) {
+            console.error('Error viewing worker:', error);
+            alert('Failed to view worker.');
+        }
+    };
+
+    // const toggleEdit = async (row, id, button) => {
+    //     const isEditing = button.textContent === 'Edit';
+    //     Array.from(row.children).forEach((cell, index) => {
+    //         if (index < fields.length) {
+    //             cell.contentEditable = isEditing; // Toggle editability
+    //             cell.style.backgroundColor = isEditing ? '#fdfd96' : ''; // Highlight editable cells
+    //         }
+    //     });
+    //     button.textContent = isEditing ? 'Save' : 'Edit';
+
+    //     if (!isEditing) {
+    //         // Save updated data logic
+    //         const updatedData = {};
+    //         Array.from(row.children).forEach((cell, index) => {
+    //             if (index < fields.length) {
+    //                 updatedData[fields[index]] = cell.textContent.trim();
+    //             }
+    //         });
+
+    //         try {
+    //             await window.electronAPI.updateDomesticWorker(id, updatedData); // Backend update call
+    //             alert('Worker updated successfully!');
+    //         } catch (error) {
+    //             console.error('Error updating worker:', error);
+    //             alert('Failed to update worker.');
+    //         }
+    //     }
+    // };
+
+    // const deleteWorker = async (id, row) => {
+    //     if (confirm('Are you sure you want to delete this helper?')) {
+    //         try {
+    //             await window.electronAPI.deleteDomesticHelper(id); // Backend delete call
+    //             alert('Helper deleted successfully!');
+    //             row.remove(); // Remove row from table
+    //         } catch (error) {
+    //             console.error('Error deleting helper:', error);
+    //             alert('Failed to delete helper.');
+    //         }
+    //     }
+    // };
+</script>
+
+</body>
+</html>

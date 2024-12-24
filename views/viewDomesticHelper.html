@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Domestic Helpers</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .edit-button {
+            cursor: pointer;
+            color: blue;
+            text-decoration: underline;
+        }
+        .delete-button {
+            cursor: pointer;
+            color: red;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Domestic Helpers</h1>
+
+<!-- Table to display the domestic helpers -->
+<table id="helpers-table">
+    <thead>
+        <tr>
+            <!-- Dynamic headers will be added here -->
+        </tr>
+    </thead>
+    <tbody id="helpers-list">
+        <!-- Dynamic rows will be added here -->
+    </tbody>
+</table>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const helperId = urlParams.get('helperId');
+    console.log("I have the helper id ", helperId);
+    
+    // Function to format date to MM/DD/YYYY for display
+    const formatDate = (date) => {
+        if (!date) return null;
+        const d = new Date(date);
+        const month = d.getMonth() + 1; // Months are 0-based
+        const day = d.getDate();
+        const year = d.getFullYear(); // Get full 4-digit year
+
+        return `${month < 10 ? '0' + month : month}/${day < 10 ? '0' + day : day}/${year}`;
+    };
+
+    // Function to format date to MM/DD/YYYY for saving
+    const formatDateForSave = (date) => {
+        const d = new Date(date);
+        const month = d.getMonth() + 1; // Months are 0-based
+        const day = d.getDate();
+        const year = d.getFullYear(); // Full year
+
+        return `${month < 10 ? '0' + month : month}/${day < 10 ? '0' + day : day}/${year}`;
+    };
+
+    // Function to format date to match input type="date" format (YYYY-MM-DD)
+    const formatDateForInput = (date) => {
+        const d = new Date(date);
+        const month = d.getMonth() + 1; // Months are 0-based
+        const day = d.getDate();
+        const year = d.getFullYear();
+
+        return `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
+    };
+
+    // Function to display a date picker (calendar input) for date fields
+    const displayDatePicker = (cell, field, value) => {
+        console.log("Date picker value: ", value)
+        const input = document.createElement('input');
+        input.type = 'date';
+        input.value = formatDateForInput(value); // Format value to match 'YYYY-MM-DD' for date input
+
+        input.addEventListener('change', () => {
+            // Save the selected date and update the cell content
+            const selectedDate = input.value;  // Get date from the input field
+            
+            if (!selectedDate) {
+                selectedDate = value;
+            } 
+
+            const formattedDate = formatDateForSave(selectedDate); // Format date as MM/DD/YYYY
+            cell.textContent = formattedDate;
+        });
+
+        cell.innerHTML = ''; // Clear the cell content
+        cell.appendChild(input);  // Append the date picker input to the cell
+    };
+
+    const fields = [
+        'lName', 'fName', 'mInitial', 'position', 'destination', 'address', 'telephoneNumber', 
+        'dateOfBirth', 'age', 'placeOfBirth', 'nationality', 'civilStatus', 'height', 
+        'weightFeet', 'weightInches', 'sicknessRecord', 'religion', 'fatherLName', 'fatherFName', 
+        'fatherMInitial', 'fatherDateOfBirth', 'motherLName', 'motherFName', 'motherMInitial', 
+        'motherDateOfBirth', 'spouseLName', 'spouseFName', 'spouseMInitial', 'spouseDateOfBirth', 
+        'contactPersonLName', 'contactPersonFName', 'contactPersonMInitial', 'contactPersonAddress', 
+        'contactPersonContactNumber', 'contactPersonRelationshipWithHelper', 'children', 'passportNumber', 
+        'passportDateOfIssue', 'passportDateOfExpiry', 'passportPlaceOfIssue', 'nameOfSchool', 
+        'courseTaken', 'yearGraduated', 'employments', 'englishSpeaking', 'englishReading', 
+        'englishWriting', 'arabicSpeaking', 'arabicReading', 'arabicWriting', 'filipinoSpeaking', 
+        'filipinoReading', 'filipinoWriting', 'otherLanguageSpeaking', 'otherLanguageReading', 
+        'otherLanguageWriting', 'babySitting', 'ironing', 'childrenCare', 'cooking', 'tutoring', 
+        'arabicCooking', 'disabledCare', 'sewing', 'cleaning', 'computer'
+    ];
+
+    // Add headers dynamically
+    const tableHeadRow = document.querySelector('#helpers-table thead tr');
+    fields.forEach(field => {
+        const th = document.createElement('th');
+        th.textContent = field.replace(/([A-Z])/g, ' $1').replace(/^\w/, c => c.toUpperCase());
+        tableHeadRow.appendChild(th);
+    });
+    tableHeadRow.appendChild(document.createElement('th')).textContent = 'Actions';
+
+    // Fetch and display data
+    window.onload = () => {
+        fetchDomesticHelper(helperId);
+    };
+
+    const fetchDomesticHelper = async (helperId) => {
+        try {
+            const helpers = await window.electronAPI.getDomesticHelper(helperId);
+            console.log("helper in view domestic helper", helpers);
+            displayHelpers(helpers);
+        } catch (error) {
+            console.error('Error fetching domestic helpers:', error);
+        }
+    };
+
+    const displayHelpers = (helpers) => {
+        const helpersList = document.getElementById('helpers-list');
+        helpersList.innerHTML = ''; // Clear any existing rows
+
+        // If helpers is not an array (i.e., a single object), convert it into an array
+        if (!Array.isArray(helpers)) {
+            helpers = [helpers]; // Wrap the single object into an array
+        }
+
+        // Now helpers will always be an array, even if it's just one helper
+        helpers.forEach(helper => {
+            const row = document.createElement('tr');
+
+            // Assuming `fields` is an array of property names to display
+            fields.forEach(field => {
+                const cell = document.createElement('td');
+
+                // Check if the field value is boolean and format as "Yes" or "No"
+                if (typeof helper[field] === 'boolean') {
+                    cell.textContent = helper[field] ? 'Yes' : 'No';
+                } else if (field === 'children') {
+                    const children = helper.children || [];
+                    cell.innerHTML = children.length - 1 > 0
+                        ? children.map(child => `Name: ${child.fName} ${child.mInitial} ${child.lName}, 
+                            Age: ${child.age}, DOB: ${child.dateOfBirth}`).join('<br>') 
+                        : [];
+                } else if (field === 'employments') {
+                    const employments = helper.employments || [];
+                    cell.innerHTML = employments.length - 1 > 0
+                        ? employments.map(employment => `Country: ${employment.country}, Working Period: ${employment.workingPeriod}, 
+                            Date: ${employment.date}, Work Description: ${employment.workDescription}`).join('<br>') 
+                        : [];
+                } else if (['dateOfBirth', 'fatherDateOfBirth', 'motherDateOfBirth', 'spouseDateOfBirth', 'passportDateOfIssue', 'passportDateOfExpiry'].includes(field)) {
+                    cell.textContent = formatDate(helper[field]);
+                } else {
+                    cell.textContent = helper[field];
+                }
+
+                cell.contentEditable = false; // Fields are not editable by default
+                row.appendChild(cell);
+            });
+
+            // Add action buttons
+            const actionsCell = document.createElement('td');
+
+            // Edit Button
+            const editButton = document.createElement('button');
+            editButton.textContent = 'Edit';
+            editButton.className = 'edit-button';
+            editButton.onclick = () => toggleEdit(row, helper._id, editButton, helper);
+            actionsCell.appendChild(editButton);
+
+            // Delete Button
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.className = 'delete-button';
+            deleteButton.onclick = () => deleteHelper(helper._id, row);
+            actionsCell.appendChild(deleteButton);
+
+            row.appendChild(actionsCell);
+            helpersList.appendChild(row);
+        });
+    };
+
+    const toggleEdit = async (row, id, button, helper) => { // Add helper as a parameter
+        const isEditing = button.textContent === 'Edit';
+        Array.from(row.children).forEach((cell, index) => {
+            if (index < fields.length) {
+                // If the field is a date field, show the date picker
+                if (['dateOfBirth', 'fatherDateOfBirth', 'motherDateOfBirth', 'spouseDateOfBirth', 'passportDateOfIssue', 'passportDateOfExpiry'].includes(fields[index])) {
+                    if (isEditing) {
+                        displayDatePicker(cell, fields[index], cell.textContent.trim()); // Show date picker
+                    }
+                } 
+                    // Toggle editability for non-date, non-boolean fields
+                    cell.contentEditable = isEditing; // Toggle editability for non-date fields
+                    cell.style.backgroundColor = isEditing ? '#fdfd96' : ''; // Highlight editable cells
+            }
+        });
+
+        button.textContent = isEditing ? 'Save' : 'Edit';
+
+        if (!isEditing) {
+            // Save updated data logic
+            const updatedData = {};
+            Array.from(row.children).forEach((cell, index) => {
+                if (index < fields.length) {
+                    let value = cell.textContent.trim();
+
+                    // If the field is a date field, format it to MM/DD/YYYY
+                    if (['dateOfBirth', 'fatherDateOfBirth', 'motherDateOfBirth', 'spouseDateOfBirth', 'passportDateOfIssue', 'passportDateOfExpiry'].includes(fields[index])) {
+                        // If the cell contains an input (the date picker), get the input value
+                        const input = cell.querySelector('input');
+                        if (input) {
+                            value = input.value; // Get the date from the input
+                        }
+
+                        // Convert date to MM/DD/YYYY format for saving and display
+                        value = formatDateForSave(value); 
+                        cell.textContent = value;  // Update cell text with the formatted date
+                    }
+
+                    // Convert Yes/No back to boolean true/false before saving
+                    if (typeof helper[fields[index]] === 'boolean') {
+                        value = value === 'Yes'; // Convert 'Yes' to true and 'No' to false
+                    }
+
+                    updatedData[fields[index]] = value;
+                }
+            });
+
+            try {
+                console.log("this is data to be passed", updatedData)
+                await window.electronAPI.updateDomesticHelper(id, updatedData); // Backend update call
+                alert('Helper updated successfully!');
+            } catch (error) {
+                console.error('Error updating helper:', error);
+                alert('Failed to update helper.');
+            }
+        }
+    };
+
+    const deleteHelper = async (id, row) => {
+        if (confirm('Are you sure you want to delete this helper?')) {
+            try {
+                await window.electronAPI.deleteDomesticHelper(id); // Backend delete call
+                alert('Helper deleted successfully!');
+                row.remove(); // Remove row from table
+            } catch (error) {
+                console.error('Error deleting helper:', error);
+                alert('Failed to delete helper.');
+            }
+        }
+    };
+</script>
+
+</body>
+</html>

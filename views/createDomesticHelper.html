@@ -6,89 +6,84 @@
     <title>Electron MongoDB App</title>
 </head>
 <body>
-    <h1>Manage Domestic Helpers</h1>
+    <h1>Create Domestic Helper</h1>
     <form id="create-domestic-helper-form">
         <!-- Basic Information -->
-        <!-- required all fields when done-->
-        <input type="text" name="lName" placeholder="Last Name">
-        <input type="text" name="fName" placeholder="First Name">
-        <input type="text" name="mInitial" placeholder="Middle Initial">
-        <input type="text" name="position" placeholder="Position">
-        <input type="text" name="destination" placeholder="Destination">
-        <input type="text" name="address" placeholder="Address">
-        <input type="number" name="telephoneNumber" placeholder="Telephone Number">
-        <input type="date" name="dateOfBirth" placeholder="Date of Birth">
-        <input type="number" name="age" placeholder="Age">
-        <input type="text" name="placeOfBirth" placeholder="Place of Birth">
-        <input type="text" name="nationality" placeholder="Nationality">
-        <input type="text" name="civilStatus" placeholder="Civil Status">
-        <input type="number" name="height" placeholder="Height (cm)">
-        <input type="number" name="weightFeet" placeholder="Weight (Feet)">
-        <input type="number" name="weightInches" placeholder="Weight (Inches)">
-        <input type="text" name="sicknessRecord" placeholder="Sickness Record">
-        <input type="text" name="religion" placeholder="Religion">
+        <input type="text" name="lName" placeholder="Last Name" required>
+        <input type="text" name="fName" placeholder="First Name" required>
+        <input type="text" name="mInitial" placeholder="Middle Initial" required>
+        <input type="text" name="position" placeholder="Position" required>
+        <input type="text" name="destination" placeholder="Destination" required>
+        <input type="text" name="address" placeholder="Address" required>
+        <input type="number" name="telephoneNumber" placeholder="Telephone Number" required>
+        <input type="date" name="dateOfBirth" placeholder="Date of Birth" required>
+        <input type="number" name="age" placeholder="Age" required>
+        <input type="text" name="placeOfBirth" placeholder="Place of Birth" required>
+        <input type="text" name="nationality" placeholder="Nationality" required>
+        <input type="text" name="civilStatus" placeholder="Civil Status" required>
+        <input type="number" name="height" placeholder="Height (cm)" required>
+        <input type="number" name="weightFeet" placeholder="Weight (Feet)" required>
+        <input type="number" name="weightInches" placeholder="Weight (Inches)" required>
+        <input type="text" name="sicknessRecord" placeholder="Sickness Record" required>
+        <input type="text" name="religion" placeholder="Religion" required>
 
         <!-- Family Information -->
         <h2>Family Information</h2>
         <fieldset>
             <legend>Father</legend>
-            <input type="text" name="fatherLName" placeholder="Last Name">
-            <input type="text" name="fatherFName" placeholder="First Name">
-            <input type="text" name="fatherMInitial" placeholder="Middle Initial">
-            <input type="date" name="fatherDateOfBirth" placeholder="Date of Birth">
+            <input type="text" name="fatherLName" placeholder="Last Name" required>
+            <input type="text" name="fatherFName" placeholder="First Name" required>
+            <input type="text" name="fatherMInitial" placeholder="Middle Initial" required>
+            <input type="date" name="fatherDateOfBirth" placeholder="Date of Birth" required>
         </fieldset>
         <fieldset>
             <legend>Mother</legend>
-            <input type="text" name="motherLName" placeholder="Last Name">
-            <input type="text" name="motherFName" placeholder="First Name">
-            <input type="text" name="motherMInitial" placeholder="Middle Initial">
-            <input type="date" name="motherDateOfBirth" placeholder="Date of Birth">
+            <input type="text" name="motherLName" placeholder="Last Name" required>
+            <input type="text" name="motherFName" placeholder="First Name" required>
+            <input type="text" name="motherMInitial" placeholder="Middle Initial" required>
+            <input type="date" name="motherDateOfBirth" placeholder="Date of Birth" required>
         </fieldset>
         <fieldset>
             <legend>Spouse</legend>
-            <input type="text" name="spouseLName" placeholder="Last Name">
-            <input type="text" name="spouseFName" placeholder="First Name">
-            <input type="text" name="spouseMInitial" placeholder="Middle Initial">
-            <input type="date" name="spouseDateOfBirth" placeholder="Date of Birth">
+            <input type="text" name="spouseLName" placeholder="Last Name" required>
+            <input type="text" name="spouseFName" placeholder="First Name" required>
+            <input type="text" name="spouseMInitial" placeholder="Middle Initial" required>
+            <input type="date" name="spouseDateOfBirth" placeholder="Date of Birth" required>
         </fieldset>
 
         <!-- Emergency Contact -->
         <h2>Emergency Contact</h2>
-        <input type="text" name="contactPersonLName" placeholder="Last Name">
-        <input type="text" name="contactPersonFName" placeholder="First Name">
-        <input type="text" name="contactPersonMInitial" placeholder="Middle Initial">
-        <input type="text" name="contactPersonAddress" placeholder="Address">
-        <input type="number" name="contactPersonContactNumber" placeholder="Contact Number">
-        <input type="text" name="contactPersonRelationshipWithHelper" placeholder="Relationship">
+        <input type="text" name="contactPersonLName" placeholder="Last Name" required>
+        <input type="text" name="contactPersonFName" placeholder="First Name" required>
+        <input type="text" name="contactPersonMInitial" placeholder="Middle Initial" required>
+        <input type="text" name="contactPersonAddress" placeholder="Address" required>
+        <input type="number" name="contactPersonContactNumber" placeholder="Contact Number" required>
+        <input type="text" name="contactPersonRelationshipWithHelper" placeholder="Relationship" required>
 
         <!-- Children Information -->
         <h2>Children Information</h2>
         <div id="children-container">
-            
         </div>
         <button type="button" id="add-child-btn">Add a Child</button>
 
         <!-- Employments Information -->
         <h2>Employments Information</h2>
         <div id="employments-container">
-            
         </div>
         <button type="button" id="add-employment-btn">Add an Employment</button>
 
         <!-- Passport Information -->
         <h2>Passport Information</h2>
-        <input type="text" name="passportNumber" placeholder="Passport Number">
-        <input type="date" name="passportDateOfIssue" placeholder="Date of Issue">
-        <input type="date" name="passportDateOfExpiry" placeholder="Date of Expiry">
-        <input type="text" name="passportPlaceOfIssue" placeholder="Place of Issue">
+        <input type="text" name="passportNumber" placeholder="Passport Number" required>
+        <input type="date" name="passportDateOfIssue" placeholder="Date of Issue" required>
+        <input type="date" name="passportDateOfExpiry" placeholder="Date of Expiry" required>
+        <input type="text" name="passportPlaceOfIssue" placeholder="Place of Issue" required>
 
         <!-- Education -->
         <h2>Education</h2>
-        <input type="text" name="nameOfSchool" placeholder="School Name">
-        <input type="text" name="courseTaken" placeholder="Course Taken">
-        <input type="number" name="yearGraduated" placeholder="Year Graduated">
-        <button type="submit">Create Domestic Helper</button>
-            
+        <input type="text" name="nameOfSchool" placeholder="School Name" required>
+        <input type="text" name="courseTaken" placeholder="Course Taken" required>
+        <input type="number" name="yearGraduated" placeholder="Year Graduated" required>
 
         <!-- Language Skills -->
         <h2>Language Skills</h2>
@@ -121,9 +116,8 @@
         <button type="submit">Create Domestic Helper</button>
     </form>
 
-    <button data-navigate="update">Go to Update</button> 
+    <button data-navigate="update">Go to Update</button>
     <button data-navigate="delete">Go to Delete</button>
-     <!-- Rest of your index.html content --> 
     <script src="../renderer.js"></script>
 </body>
 </html>

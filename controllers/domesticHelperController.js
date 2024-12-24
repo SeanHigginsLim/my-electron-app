@@ -3,9 +3,9 @@ const domesticHelperSchema = require('../models/domesticHelperSchema');
 
 // Controller functions
 const domesticHelperController = {
+    // Create a domestic helper
     createDomesticHelper: async (req, res) => {
         try {
-            console.log("I am in domestic helper controller", req.body)
             const newHelper = new domesticHelperSchema(req.body);
             await newHelper.save().then(() => console.log("Domestic helper created successfully!"))
             .catch((err) => console.error("Error creating domestic helper:", err));
@@ -15,6 +15,7 @@ const domesticHelperController = {
         }
     },
 
+    // Get details of a domestic helper
     getDomesticHelper: async (req, res) => {
         try {
             const helper = await domesticHelperSchema.findById(req.params.id);
@@ -24,6 +25,7 @@ const domesticHelperController = {
         }
     },
 
+    // Get details of all domestic helpers
     getAllDomesticHelpers: async (req, res) =>{
         try {
             const helpers = await domesticHelperSchema.find(); // This will fetch all the helpers
@@ -33,15 +35,23 @@ const domesticHelperController = {
         }
     },
 
+    // Update details of a doemstic helper
     updateDomesticHelper: async (req, res) => {
         try {
             const updatedHelper = await domesticHelperSchema.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    
+            // Check if the helper was found and updated
+            if (!updatedHelper) {
+                return res.status(404).send({ message: 'Domestic helper not found' });
+            }
+    
             res.send(updatedHelper);
         } catch (error) {
             res.status(400).send(error);
         }
     },
 
+    // Delete a domestic helper
     deleteDomesticHelper: async (req, res) => {
         try {
             await domesticHelperSchema.findByIdAndDelete(req.params.id);

@@ -38,17 +38,6 @@ app.on('activate', () => {
     }
 });
 
-// Handle fetching all domestic helpers
-ipcMain.handle('getAllDomesticHelpers', async () => {
-    try {
-        const response = await axios.get('http://localhost:3000/api/domesticHelpers');
-        return response.data; // Return the helpers data to the renderer
-    } catch (error) {
-        console.error('Error fetching domestic helpers:', error);
-        throw error;
-    }
-});
-
 ipcMain.handle('load-page', (event, page) => { 
     console.log("mainWindow: ", mainWindow)
     if (!mainWindow) {
@@ -58,9 +47,10 @@ ipcMain.handle('load-page', (event, page) => {
         console.log("it is mainwindow")
     }
 
-    const validPages = ['index', 'login', 'signup', 'homepage', 'profile', 'domesticHelpers', 
-        'skilledWorkers', 'create', 'update', 'delete', 'createDomesticHelper', 'updateDomesticHelper',
-        'deleteDomesticHelper', 'createSkilledWorker', 'updateSkilledWorker', 'deleteSkilledWorker']; 
+    const validPages = ['login', 'signup', 'homepage', 'profile', 'domesticHelpers', 'skilledWorkers', 
+        'create', 'createDomesticHelper', 'updateDomesticHelper', 'deleteDomesticHelper', 'domesticHelpers',
+        'viewDomesticHelper', 'createSkilledWorker', 'updateSkilledWorker', 'deleteSkilledWorker', 
+        'skilledWorkers', 'viewSkilledWorker']; 
     if (validPages.includes(page)) { 
         const filePath = path.join(__dirname, 'views', `${page}.html`);
         mainWindow.loadFile(filePath).catch((err) => {
@@ -69,6 +59,14 @@ ipcMain.handle('load-page', (event, page) => {
     } else { 
         console.error(`Invalid page: ${page}`); 
     } 
+});
+
+ipcMain.handle('view-domestic-helper', async (event, helperId) => {
+    mainWindow.loadFile(path.join(__dirname, 'views', 'viewDomesticHelper.html'), {
+        query: {
+            helperId: helperId, // Pass the query parameter as an object
+        }
+    }).catch(err => console.error('Failed to load viewDomesticHelper.html:', err));
 });
 
 ipcMain.handle('create-domestic-helper', async (event, helper) => { 
@@ -81,11 +79,38 @@ ipcMain.handle('create-domestic-helper', async (event, helper) => {
     } 
 }); 
 
-ipcMain.handle('update-domestic-helper', async (event, helper) => { 
-    try { 
-        const response = await axios.put(`http://localhost:3000/api/domesticHelpers/${helper._id}`, helper); 
+// Handle fetching domestic helpers
+ipcMain.handle('get-domestic-helper', async (event, helperId) => {
+    try {
+        const response = await axios.get(`http://localhost:3000/api/domesticHelpers/${helperId}`);
+        // console.log("get domestic response", response)
+        return response.data; // Return the helpers data to the renderer
+    } catch (error) {
+        console.log("error in get domestic")
+        console.error('Error fetching domestic helpers:', error);
+        throw error;
+    }
+});
+
+// Handle fetching all domestic helpers
+ipcMain.handle('get-all-domestic-helpers', async () => {
+    try {
+        const response = await axios.get('http://localhost:3000/api/domesticHelpers');
+        return response.data; // Return the helpers data to the renderer
+    } catch (error) {
+        console.error('Error fetching domestic helpers:', error);
+        throw error;
+    }
+});
+
+ipcMain.handle('update-domestic-helper', async (event, helperId, data) => { 
+    try {
+        console.log("update domestic helper data ", data)
+        const response = await axios.put(`http://localhost:3000/api/domesticHelpers/${helperId}`, data); 
+        // console.log("updated", response.data)
         return response.data; 
     } catch (error) { 
+        console.log("error in main")
         console.error(error); 
         throw error; 
     } 
@@ -101,6 +126,14 @@ ipcMain.handle('delete-domestic-helper', async (event, helperId) => {
     } 
 });
 
+ipcMain.handle('view-skilled-worker', async (event, workerId) => {
+    mainWindow.loadFile(path.join(__dirname, 'views', 'viewSkilledWorker.html'), {
+        query: {
+            workerId: workerId, // Pass the query parameter as an object
+        }
+    }).catch(err => console.error('Failed to load viewSkilledWorker.html:', err));
+});
+
 ipcMain.handle('create-skilled-worker', async (event, worker) => { 
     try { 
         const response = await axios.post('http://localhost:3000/api/skilledWorkers', worker); 
@@ -111,9 +144,33 @@ ipcMain.handle('create-skilled-worker', async (event, worker) => {
     } 
 }); 
 
-ipcMain.handle('update-skilled-worker', async (event, worker) => { 
+// Handle fetching skilled workers
+ipcMain.handle('get-skilled-worker', async (event, workerId) => {
+    try {
+        const response = await axios.get(`http://localhost:3000/api/skilledWorkers/${workerId}`);
+        // console.log("get skilled response", response)
+        return response.data; // Return the workers data to the renderer
+    } catch (error) {
+        console.log("error in get skilled")
+        console.error('Error fetching skilled workers:', error);
+        throw error;
+    }
+});
+
+// Handle fetching all skilled workers
+ipcMain.handle('get-all-skilled-workers', async () => {
+    try {
+        const response = await axios.get('http://localhost:3000/api/skilledWorkers');
+        return response.data; // Return the workers data to the renderer
+    } catch (error) {
+        console.error('Error fetching skilled workers:', error);
+        throw error;
+    }
+});
+
+ipcMain.handle('update-skilled-worker', async (event, workerId, data) => { 
     try { 
-        const response = await axios.put(`http://localhost:3000/api/skilledWorkers/${worker._id}`, worker); 
+        const response = await axios.put(`http://localhost:3000/api/skilledWorkers/${workerId}`, data); 
         return response.data; 
     } catch (error) { 
         console.error(error); 
