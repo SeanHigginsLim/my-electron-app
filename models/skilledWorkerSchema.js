@@ -15,6 +15,16 @@ const formatDate = (date) => {
 // Create a new skilled worker object.
 const skilledWorkerSchema = new mongoose.Schema({
     workerID: { type: Number, unique: true },
+    profileImage: { 
+        data: {
+            type: String,
+            required: true // Ensure this is defined correctly
+        },
+        contentType: {
+            type: String,
+            required: true // Ensure this is defined correctly
+        } 
+    },
     lName: { type: String, required: true },
     fName: { type: String, required: true },
     mInitial: { type: String, required: true },
@@ -27,9 +37,9 @@ const skilledWorkerSchema = new mongoose.Schema({
     placeOfBirth: { type: String, required: true },
     nationality: { type: String, required: true },
     civilStatus: { type: String, required: true },
-    height: { type: Number, required: true },
-    weightFeet: { type: Number, required: true },
-    weightInches: { type: Number, required: true },
+    heightFeet: { type: Number, required: true },
+    heightInches: { type: Number, required: true },
+    weight: { type: Number, required: true },
     sicknessRecord: { type: String, required: true },
     religion: { type: String, required: true },
     fatherLName: { type: String, required: true },

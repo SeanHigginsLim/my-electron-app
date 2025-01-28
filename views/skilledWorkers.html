@@ -6,8 +6,9 @@
     <title>Skilled Workers</title>
     <style>
         body {
+            background-color: rgb(189, 31, 68);
             font-family: Arial, sans-serif;
-            padding: 20px;
+            /* padding: 20px; */
         }
         table {
             width: 100%;
@@ -32,23 +33,81 @@
             color: red;
             text-decoration: underline;
         }
+
+        /* Add some basic styling */
+        #navbar nav {
+            background-color: black;
+            color: white;
+            margin-top: 0.5%;
+            margin-bottom: 20px;
+            height: 60px; /* Set a fixed height for the navbar */
+            width: 99%;
+            display: flex;
+            align-items: center; /* Center items vertically */
+            position: fixed; /* Make the navbar sticky */
+            top: 0; /* Stick it to the top */
+            z-index: 1000;
+        }
+
+        #navbar ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex; /* Use Flexbox for layout */
+            justify-content: space-between; /* Space out items evenly */
+            width: 100%; /* Ensure navbar takes full width */
+            height: 100%;
+        }
+
+        #navbar li {
+            flex: 1; /* Each <li> takes an equal 1/5 of the width */
+        }
+
+        #navbar li:hover {
+            background-color: grey; /* Highlight the entire <li> */
+            cursor: pointer; /* Change cursor to pointer on hover */
+        }
+
+        #navbar button {
+            width: 100%; /* Ensure the button spans the full width of the <li> */
+            height: 100%; /* Ensure the button spans the full height of the <li> */
+            /* border: 2px solid black; */
+            background-color: transparent;
+            text-decoration: none;
+            display: flex; /* Align text vertically */
+            justify-content: center; /* Center the text horizontally */
+            align-items: center; /* Center the text vertically */
+            color: white;
+        }
     </style>
+    <script src="../renderer.js"></script>
 </head>
 <body>
+    <div id="navbar">
+        <nav>
+            <ul>
+                <li><button data-navigate="homepage">Home</button></li>
+                <li><button data-navigate="createDomesticHelper">Create Domestic Helper</button></li>
+                <li><button data-navigate="createSkilledWorker">Create Skilled Worker</button></li>
+                <li><button data-navigate="domesticHelpers">View Domestic Helpers</button></li>
+                <li><button data-navigate="skilledWorkers">View Skilled Workers</button></li>
+            </ul>
+        </nav>
+    </div>
 
-<h1>Skilled Workers</h1>
+    <h1>Skilled Workers</h1>
 
-<!-- Table to display the skilled workers -->
-<table id="workers-table">
-    <thead>
-        <tr>
-            <!-- Dynamic headers will be added here -->
-        </tr>
-    </thead>
-    <tbody id="workers-list">
-        <!-- Dynamic rows will be added here -->
-    </tbody>
-</table>
+    <!-- Table to display the skilled workers -->
+    <table id="workers-table">
+        <thead>
+            <tr>
+                <!-- Dynamic headers will be added here -->
+            </tr>
+        </thead>
+        <tbody id="workers-list">
+            <!-- Dynamic rows will be added here -->
+        </tbody>
+    </table>
 
 <script>
     // Worker fields to include

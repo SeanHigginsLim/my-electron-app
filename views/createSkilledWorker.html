@@ -4,10 +4,80 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Electron MongoDB App</title>
+
+    <style>
+        body {
+            background-color: rgb(189, 31, 68);
+            font-family: Arial, sans-serif;
+        }
+
+        /* Add some basic styling */
+        #navbar nav {
+            background-color: black;
+            color: white;
+            margin-top: 0.5%;
+            margin-bottom: 20px;
+            height: 60px; /* Set a fixed height for the navbar */
+            width: 99%;
+            display: flex;
+            align-items: center; /* Center items vertically */
+            position: fixed; /* Make the navbar sticky */
+            top: 0; /* Stick it to the top */
+            z-index: 1000;
+        }
+
+        #navbar ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex; /* Use Flexbox for layout */
+            justify-content: space-between; /* Space out items evenly */
+            width: 100%; /* Ensure navbar takes full width */
+            height: 100%;
+        }
+
+        #navbar li {
+            flex: 1; /* Each <li> takes an equal 1/5 of the width */
+        }
+
+        #navbar li:hover {
+            background-color: grey; /* Highlight the entire <li> */
+            cursor: pointer; /* Change cursor to pointer on hover */
+        }
+
+        #navbar button {
+            width: 100%; /* Ensure the button spans the full width of the <li> */
+            height: 100%; /* Ensure the button spans the full height of the <li> */
+            /* border: 2px solid black; */
+            background-color: transparent;
+            text-decoration: none;
+            display: flex; /* Align text vertically */
+            justify-content: center; /* Center the text horizontally */
+            align-items: center; /* Center the text vertically */
+            color: white;
+        }
+    </style>
+    <script src="../renderer.js"></script>
 </head>
 <body>
+    <div id="navbar">
+        <nav>
+            <ul>
+                <li><button data-navigate="homepage">Home</button></li>
+                <li><button data-navigate="createDomesticHelper">Create Domestic Helper</button></li>
+                <li><button data-navigate="createSkilledWorker">Create Skilled Worker</button></li>
+                <li><button data-navigate="domesticHelpers">View Domestic Helpers</button></li>
+                <li><button data-navigate="skilledWorkers">View Skilled Workers</button></li>
+            </ul>
+        </nav>
+    </div>
     <h1>Create Skilled Worker</h1>
-    <form id="create-skilled-worker-form">
+    <form id="create-skilled-worker-form" enctype="multipart/form-data">
+        <div>
+            <label for="profileImage">Profile Image:</label>
+            <input type="file" id="profileImage" name="profileImage" accept="image/*" required>
+        </div>
+
         <!-- Basic Information -->
         <input type="text" name="lName" placeholder="Last Name" required>
         <input type="text" name="fName" placeholder="First Name" required>
@@ -21,9 +91,9 @@
         <input type="text" name="placeOfBirth" placeholder="Place of Birth" required>
         <input type="text" name="nationality" placeholder="Nationality" required>
         <input type="text" name="civilStatus" placeholder="Civil Status" required>
-        <input type="number" name="height" placeholder="Height (cm)" required>
-        <input type="number" name="weightFeet" placeholder="Weight (Feet)" required>
-        <input type="number" name="weightInches" placeholder="Weight (Inches)" required>
+        <input type="number" name="heightFeet" placeholder="Height (Feet)" required>
+        <input type="number" name="heightInches" placeholder="Height (Inches)" required>
+        <input type="number" name="weight" placeholder="Weight (Kg)" required>
         <input type="text" name="sicknessRecord" placeholder="Sickness Record" required>
         <input type="text" name="religion" placeholder="Religion" required>
 
@@ -103,12 +173,8 @@
         <!-- Skills -->
         <h2>Other Skills</h2>
         <input type="text" name="otherSkills" placeholder="Other Skills" required>
-
+        <br><br>
         <button type="submit">Create Skilled Worker</button>
     </form>
-
-    <button data-navigate="update">Go to Update</button>
-    <button data-navigate="delete">Go to Delete</button>
-    <script src="../renderer.js"></script>
 </body>
 </html>

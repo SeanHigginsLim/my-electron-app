@@ -12,7 +12,8 @@ mongoose.connect('mongodb://localhost:27017/trialMushie')
   .catch(err => console.error('Could not connect to MongoDB:', err));
 
 // Middleware
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '10mb' })); // Increase JSON body limit
+app.use(bodyParser.urlencoded({ limit: '10mb', extended: true })); // Increase URL-encoded body limit
 
 // Use Profile Routes
 app.use('/api', routes);

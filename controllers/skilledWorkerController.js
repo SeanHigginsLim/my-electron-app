@@ -7,21 +7,12 @@ const skilledWorkerController = {
     createSkilledWorker: async (req, res) => {
         try {
             const newWorker = new skilledWorkerSchema(req.body);
+
             await newWorker.save().then(() => console.log("Skilled worker created successfully!"))
             .catch((err) => console.error("Error creating skilled worker:", err));
             res.status(201).send(newWorker);
         } catch (error) {
             res.status(400).send(error);
-        }
-    },
-
-    // Get details of a skilled worker
-    getAllSkilledWorkers: async (req, res) =>{
-        try {
-            const workers = await skilledWorkerSchema.find(); // This will fetch all the workers
-            res.send(workers);
-        } catch (error) {
-            res.status(404).send(error);
         }
     },
 
@@ -35,6 +26,16 @@ const skilledWorkerController = {
         }
     },
 
+    // Get details of a skilled worker
+    getAllSkilledWorkers: async (req, res) =>{
+        try {
+            const workers = await skilledWorkerSchema.find(); // This will fetch all the workers
+            res.send(workers);
+        } catch (error) {
+            res.status(404).send(error);
+        }
+    },
+    
     // Update details of a skilled worker
     updateSkilledWorker: async (req, res) => {
         try {

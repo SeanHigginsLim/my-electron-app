@@ -7,283 +7,743 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            padding: 20px;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            position: relative;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header img {
+            width: 14%;
+        }
+        .header-details {
+            text-align: center;
+            flex-grow: 1;
+        }
+        .form-section {
             margin-top: 20px;
         }
-        th, td {
-            padding: 12px;
-            border: 1px solid #ddd;
+        .form-section table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .form-section table, .form-section th, .form-section td {
+            border: 1px solid black;
+        }
+        .form-section th, .form-section td {
+            padding: 8px;
             text-align: left;
         }
-        th {
-            background-color: #f4f4f4;
+        .form-section th {
+            background-color: #f2f2f2;
+            width: 20%;
         }
-        .edit-button {
+        .signature-section {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        input[type="text"], input[type="number"], input[type="date"], textarea {
+            width: 100%;
+            border: none;
+            background-color: transparent;
+        }
+        .photo-upload {
+            width: 150px;
+            height: 150px;
+            border: 1px solid black;
+            text-align: center;
+            padding: 8px;
+            background-color: #f9f9f9;
+        }
+        .skills-section {
+            display: flex;
+            justify-content: space-between;
+            width: 395%;
+        }
+        .skills-column {
+            width: 50%;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section h2 {
+            background-color: #f4f4f4;
+            padding: 10px;
+        }
+        .field {
+            margin-bottom: 10px;
+        }
+        .field label {
+            display: block;
+            font-weight: bold;
+        }
+        .field span {
+            display: block;
+            background-color: #f9f9f9;
+            padding: 5px;
+        }
+        .edit-button, .delete-button {
             cursor: pointer;
             color: blue;
             text-decoration: underline;
+            margin-right: 10px;
         }
         .delete-button {
-            cursor: pointer;
             color: red;
-            text-decoration: underline;
+        }
+        tr {
+            display: table-row;
+            vertical-align: inherit;
+            unicode-bidi: isolate;
+            border-color: inherit;
+        }
+        table {
+            border-collapse: separate;
+            text-indent: initial;
+            border-spacing: 2px;
+        }
+
+        /* Add some basic styling */
+        #navbar nav {
+            background-color: black;
+            color: white;
+            margin-top: 0.5%;
+            margin-bottom: 20px;
+            height: 60px; /* Set a fixed height for the navbar */
+            width: 99%;
+            display: flex;
+            align-items: center; /* Center items vertically */
+            position: fixed; /* Make the navbar sticky */
+            top: 0; /* Stick it to the top */
+            z-index: 1000;
+        }
+
+        #navbar ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex; /* Use Flexbox for layout */
+            justify-content: space-between; /* Space out items evenly */
+            width: 100%; /* Ensure navbar takes full width */
+            height: 100%;
+        }
+
+        #navbar li {
+            flex: 1; /* Each <li> takes an equal 1/5 of the width */
+        }
+
+        #navbar li:hover {
+            background-color: grey; /* Highlight the entire <li> */
+            cursor: pointer; /* Change cursor to pointer on hover */
+        }
+
+        #navbar button {
+            width: 100%; /* Ensure the button spans the full width of the <li> */
+            height: 100%; /* Ensure the button spans the full height of the <li> */
+            /* border: 2px solid black; */
+            background-color: transparent;
+            text-decoration: none;
+            display: flex; /* Align text vertically */
+            justify-content: center; /* Center the text horizontally */
+            align-items: center; /* Center the text vertically */
+            color: white;
         }
     </style>
+    <script src="../renderer.js"></script>
 </head>
 <body>
+    <div id="navbar">
+        <nav>
+            <ul>
+                <li><button data-navigate="homepage">Home</button></li>
+                <li><button data-navigate="createDomesticHelper">Create Domestic Helper</button></li>
+                <li><button data-navigate="createSkilledWorker">Create Skilled Worker</button></li>
+                <li><button data-navigate="domesticHelpers">View Domestic Helpers</button></li>
+                <li><button data-navigate="skilledWorkers">View Skilled Workers</button></li>
+            </ul>
+        </nav>
+    </div>
 
-<h1>Domestic Helpers</h1>
-
-<!-- Table to display the domestic helpers -->
-<table id="helpers-table">
-    <thead>
-        <tr>
-            <!-- Dynamic headers will be added here -->
-        </tr>
-    </thead>
-    <tbody id="helpers-list">
-        <!-- Dynamic rows will be added here -->
-    </tbody>
-</table>
-
-<script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const helperId = urlParams.get('helperId');
-    console.log("I have the helper id ", helperId);
-    
-    // Function to format date to MM/DD/YYYY for display
-    const formatDate = (date) => {
-        if (!date) return null;
-        const d = new Date(date);
-        const month = d.getMonth() + 1; // Months are 0-based
-        const day = d.getDate();
-        const year = d.getFullYear(); // Get full 4-digit year
-
-        return `${month < 10 ? '0' + month : month}/${day < 10 ? '0' + day : day}/${year}`;
-    };
-
-    // Function to format date to MM/DD/YYYY for saving
-    const formatDateForSave = (date) => {
-        const d = new Date(date);
-        const month = d.getMonth() + 1; // Months are 0-based
-        const day = d.getDate();
-        const year = d.getFullYear(); // Full year
-
-        return `${month < 10 ? '0' + month : month}/${day < 10 ? '0' + day : day}/${year}`;
-    };
-
-    // Function to format date to match input type="date" format (YYYY-MM-DD)
-    const formatDateForInput = (date) => {
-        const d = new Date(date);
-        const month = d.getMonth() + 1; // Months are 0-based
-        const day = d.getDate();
-        const year = d.getFullYear();
-
-        return `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
-    };
-
-    // Function to display a date picker (calendar input) for date fields
-    const displayDatePicker = (cell, field, value) => {
-        console.log("Date picker value: ", value)
-        const input = document.createElement('input');
-        input.type = 'date';
-        input.value = formatDateForInput(value); // Format value to match 'YYYY-MM-DD' for date input
-
-        input.addEventListener('change', () => {
-            // Save the selected date and update the cell content
-            const selectedDate = input.value;  // Get date from the input field
+    <div class="container" style="margin-top: 5%;">
+        <div class="header">
+            <img src="../Deltavir.jpg" alt="Logo">
+            <div class="header-details">
+                <h1>DELTAVIR</h1>
+                <p>Overseas Job Placement & General Services, Inc.</p>
+                <p>DMW LICENSE NO. 258-LB-051622-R</p>
+                <p>1413 A. MABINI STREET, ERMITA MANILA</p>
+            </div>
+            <div id="imageContainer"></div>
+        </div>
+        <div class="form-section">
+            <table id="helper-info">
+                <!-- Add ID for JavaScript reference -->
+                <tr>
+                    <th>FULL NAME:</th>
+                    <td colspan="3" style="border: none; white-space: nowrap;">
+                        <input type="text" name="fName" style="width: auto; display: inline;">
+                        <input type="text" name="mInitial" style="width: auto; display: inline;">
+                        <input type="text" name="lName" style="width: auto; display: inline;">
+                    </td>
+                </tr>
+                <tr>
+                    <th>POSITION APPLIED FOR:</th>
+                    <td><input type="text" name="positionAppliedFor"></td>
+                    <th>DESTINATION:</th>
+                    <td><input type="text" name="destination"></td>
+                </tr>
+                <tr>
+                    <th>ADDRESS:</th>
+                    <td colspan="3"><input type="text" name="address"></td>
+                </tr>
+                <tr>
+                    <th>TELEPHONE NO.:</th>
+                    <td><input type="number" name="telephoneNo"></td>
+                    <th>DATE OF BIRTH:</th>
+                    <td><input type="date" name="dateOfBirth"></td>
+                </tr>
+                <tr>
+                    <th>AGE:</th>
+                    <td><input type="number" name="age"></td>
+                    <th>PLACE OF BIRTH:</th>
+                    <td><input type="text" name="placeOfBirth"></td>
+                </tr>
+                <tr>
+                    <th>NATIONALITY:</th>
+                    <td><input type="text" name="nationality"></td>
+                    <th>CIVIL STATUS:</th>
+                    <td><input type="text" name="civilStatus"></td>
+                </tr>
+                <tr>
+                    <th>HEIGHT:</th>
+                    <td>
+                        <input type="text" name="heightFeet" style="width: 10%;">
+                        <input type="text" name="heightInches" style="width: 10%;">
+                    </td>
+                    <th>WEIGHT:</th>
+                    <td><input type="text" name="weight"></td>
+                </tr>
+                <tr>
+                    <th>Sickness (Record):</th>
+                    <td><input type="text" name="sicknessRecord"></td>
+                    <th>RELIGION:</th>
+                    <td><input type="text" name="religion"></td>
+                </tr>
+                <tr>
+                    <th>FATHER'S NAME:</th>
+                    <td colspan="3" style="border: none; white-space: nowrap;">
+                        <input type="text" name="fatherFName" style="width: auto; display: inline;">
+                        <input type="text" name="fatherMInitial" style="width: auto; display: inline;">
+                        <input type="text" name="fatherLName" style="width: auto; display: inline;">
+                    </td>
+                </tr>
+                <tr>
+                    <th>DATE OF BIRTH:</th>
+                    <td colspan="1"><input type="date" name="fatherDateOfBirth"></td>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <th>MOTHER'S NAME:</th>
+                    <td colspan="3" style="border: none; white-space: nowrap;">
+                        <input type="text" name="motherFName" style="width: auto; display: inline;">
+                        <input type="text" name="motherMInitial" style="width: auto; display: inline;">
+                        <input type="text" name="motherLName" style="width: auto; display: inline;">
+                    </td>
+                </tr>
+                <tr>
+                    <th>DATE OF BIRTH:</th>
+                    <td><input type="date" name="motherDateOfBirth"></td>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <th>NAME OF HUSBAND/WIFE:</th>
+                    <td colspan="3" style="border: none; white-space: nowrap;">
+                        <input type="text" name="spouseFName" style="width: auto; display: inline;">
+                        <input type="text" name="spouseMInitial" style="width: auto; display: inline;">
+                        <input type="text" name="spouseLName" style="width: auto; display: inline;">
+                    </td>
+                </tr>
+                <tr>
+                    <th>DATE OF BIRTH:</th>
+                    <td><input type="date" name="spouseDateOfBirth"></td>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <th>CONTACT PERSON IN CASE OF EMERGENCY:</th>
+                    <td colspan="3" style="border: none; white-space: nowrap;">
+                        <input type="text" name="contactPersonFName" style="width: auto; display: inline;">
+                        <input type="text" name="contactPersonMInitial" style="width: auto; display: inline;">
+                        <input type="text" name="contactPersonLName" style="width: auto; display: inline;">
+                    </td>
+                </tr>
+                <tr>
+                    <th>ADDRESS:</th>
+                    <td colspan="3"><input type="text" name="contactPersonAddress"></td>
+                </tr>
+                <tr>
+                    <th>CONTACT NO.:</th>
+                    <td><input type="number" name="contactPersonContactNo"></td>
+                    <th>RELATIONSHIP:</th>
+                    <td><input type="text" name="contactPersonRelationship"></td>
+                </tr>
+                <tr>
+                    <th colspan="4">PASSPORT DETAILS</th>
+                </tr>
+                <tr>
+                    <td>PASSPORT NO.: <input type="text" name="passportNo"></td>
+                    <td>PASSPORT DATE OF ISSUE: <input type="date" name="passportDateOfIssue"></td>
+                    <td>PASSPORT DATE OF EXPIRY: <input type="date" name="passportDateOfExpiry"></td>
+                    <td>PASSPORT PLACE OF ISSUE: <input type="text" name="passportPlaceOfIssue"></td>
+                </tr>
+                <tr>
+                    <th colspan="4" style="text-align: center; font-size: 125%;">CHILDREN RECORD</th>
+                </tr>
+                <tr>
+                    <th colspan="2">NAME OF CHILDREN</th>
+                    <th>AGE</th>
+                    <th>DATE OF BIRTH</th>
+                </tr>
+                <tr>
+                    <td colspan="2" id="name"></td>
+                    <td id="age"></td>
+                    <td id="dateOfBirth"></td>
+                </tr>
+                <tr>
+                    <th colspan="4" style="text-align: center; font-size: 125%;">EDUCATIONAL ATTAINMENT</th>
+                </tr>
+                <tr>
+                    <th>NAME OF SCHOOL:</th>
+                    <td colspan="3"><input type="text" name="nameOfSchool"></td>
+                </tr>
+                <tr>
+                    <th>COURSE TAKEN:</th>
+                    <td colspan="3"><input type="text" name="courseTaken"></td>
+                </tr>
+                <tr>
+                    <th>YEAR GRADUATED:</th>
+                    <td colspan="3"><input type="text" name="yearGraduated"></td>
+                </tr>
+                <tr>
+                    <th colspan="4" style="text-align: center; font-size: 125%;">EMPLOYMENT RECORD</th>
+                </tr>
+                <tr>
+                    <th>COUNTRY</th>
+                    <th>WORKING PERIOD</th>
+                    <th>DATE</th>
+                    <th>WORK DESCRIPTION</th>
+                </tr>
+                <tr>
+                    <td id="employmentCountry"></td>
+                    <td id="employmentWorkingPeriod"></td>
+                    <td id="employmentDate"></td>
+                    <td id="employmentWorkDescription"></td>
+                </tr>
+                <tr>
+                    <th colspan="4" style="text-align: center; font-size: 125%;">LANGUAGE SKILLS</th>
+                </tr>
+                <tr>
+                    <th>LANGUAGE</th>
+                    <th>SPEAKING</th>
+                    <th>READING</th>
+                    <th>WRITING</th>
+                </tr>
+                <tr>
+                    <td>English</td>
+                    <td><input type="checkbox" name="englishSpeaking"></td>
+                    <td><input type="checkbox" name="englishReading"></td>
+                    <td><input type="checkbox" name="englishWriting"></td>
+                </tr>
+                <tr>
+                    <td>Arabic</td>
+                    <td><input type="checkbox" name="arabicSpeaking"></td>
+                    <td><input type="checkbox" name="arabicReading"></td>
+                    <td><input type="checkbox" name="arabicWriting"></td>
+                </tr>
+                <tr>
+                    <td>Filipino</td>
+                    <td><input type="checkbox" name="filipinoSpeaking"></td>
+                    <td><input type="checkbox" name="filipinoReading"></td>
+                    <td><input type="checkbox" name="filipinoWriting"></td>
+                </tr>
+                <tr>
+                    <td>Other Language</td>
+                    <td><input type="checkbox" name="otherLanguageSpeaking"></td>
+                    <td><input type="checkbox" name="otherLanguageReading"></td>
+                    <td><input type="checkbox" name="otherLanguageWriting"></td>
+                </tr>
+                <tr>
+                    <th colspan="4" style="text-align: center; font-size: 125%;">OTHER SKILLS</th>
+                </tr>
+                <tr>
+                    <td class="skills-section" colspan="4">
+                        <div class="skills-column">
+                            <ul>
+                                <li>Baby Sitting: <input type="checkbox" name="babySitting"></li>
+                                <li>Ironing: <input type="checkbox" name="ironing"></li>
+                                <li>Children Care: <input type="checkbox" name="childrenCare"></li>
+                                <li>Cooking: <input type="checkbox" name="cooking"></li>
+                                <li>Tutoring: <input type="checkbox" name="tutoring"></li>
+                            </ul>
+                        </div>
+                        <div class="skills-column">
+                            <ul>
+                                <li>Arabic Cooking: <input type="checkbox" name="arabicCooking"></li>
+                                <li>Disabled Care: <input type="checkbox" name="disabledCare"></li>
+                                <li>Sewing: <input type="checkbox" name="sewing"></li>
+                                <li>Cleaning: <input type="checkbox" name="cleaning"></li>
+                                <li>Computer: <input type="checkbox" name="computer"></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
             
-            if (!selectedDate) {
-                selectedDate = value;
-            } 
+        <div class="signature-section">
+            <div>
+                <p>Signature:</p>
+                <p>______________________</p>
+            </div>
+            <div>
+                <p>Date:</p>
+                <p>______________________</p>
+            </div>
+        </div>
+    </div>
+    <button id="universal-edit-button" class="edit-button">Edit</button>
+    <button id="universal-save-button" class="edit-button" style="display: none;">Save</button>
+    <button id="universal-delete-button" class="delete-button">Delete</button>
 
-            const formattedDate = formatDateForSave(selectedDate); // Format date as MM/DD/YYYY
-            cell.textContent = formattedDate;
-        });
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const helperId = urlParams.get('helperId');
+        console.log("I have the helper id ", helperId);
+        
+        window.onload = () => {
+            fetchDomesticHelper(helperId);
+        };
+    
+        const fetchDomesticHelper = async (helperId) => {
+            try {
+                const helpers = await window.electronAPI.getDomesticHelper(helperId);
+                console.log("helper in view domestic helper", helpers);
+                displayHelpers(helpers);
+            } catch (error) {
+                console.error('Error fetching domestic helpers:', error);
+            }
+        };
+    
+        const displayHelpers = (helpers) => {
+            if (!Array.isArray(helpers)) {
+                helpers = [helpers]; // Wrap single object in array
+            }
+            helpers.forEach(helper => {
+                console.log("I have my image ", helper.profileImage.data.toString("base64"))
+                const base64Image = helper.profileImage.data.toString("base64")
 
-        cell.innerHTML = ''; // Clear the cell content
-        cell.appendChild(input);  // Append the date picker input to the cell
-    };
+                const imgElement = document.createElement('img');
+                imgElement.src = `data:image/jpeg;base64,${base64Image}`;
+                imgElement.alt = 'Helper Image';
+                imgElement.style.width = '150px';
+                imgElement.style.height = 'auto';
 
-    const fields = [
-        'lName', 'fName', 'mInitial', 'position', 'destination', 'address', 'telephoneNumber', 
-        'dateOfBirth', 'age', 'placeOfBirth', 'nationality', 'civilStatus', 'height', 
-        'weightFeet', 'weightInches', 'sicknessRecord', 'religion', 'fatherLName', 'fatherFName', 
-        'fatherMInitial', 'fatherDateOfBirth', 'motherLName', 'motherFName', 'motherMInitial', 
-        'motherDateOfBirth', 'spouseLName', 'spouseFName', 'spouseMInitial', 'spouseDateOfBirth', 
-        'contactPersonLName', 'contactPersonFName', 'contactPersonMInitial', 'contactPersonAddress', 
-        'contactPersonContactNumber', 'contactPersonRelationshipWithHelper', 'children', 'passportNumber', 
-        'passportDateOfIssue', 'passportDateOfExpiry', 'passportPlaceOfIssue', 'nameOfSchool', 
-        'courseTaken', 'yearGraduated', 'employments', 'englishSpeaking', 'englishReading', 
-        'englishWriting', 'arabicSpeaking', 'arabicReading', 'arabicWriting', 'filipinoSpeaking', 
-        'filipinoReading', 'filipinoWriting', 'otherLanguageSpeaking', 'otherLanguageReading', 
-        'otherLanguageWriting', 'babySitting', 'ironing', 'childrenCare', 'cooking', 'tutoring', 
-        'arabicCooking', 'disabledCare', 'sewing', 'cleaning', 'computer'
-    ];
+                document.getElementById('imageContainer').appendChild(imgElement);
 
-    // Add headers dynamically
-    const tableHeadRow = document.querySelector('#helpers-table thead tr');
-    fields.forEach(field => {
-        const th = document.createElement('th');
-        th.textContent = field.replace(/([A-Z])/g, ' $1').replace(/^\w/, c => c.toUpperCase());
-        tableHeadRow.appendChild(th);
-    });
-    tableHeadRow.appendChild(document.createElement('th')).textContent = 'Actions';
+                document.querySelector('input[name="fName"]').value = helper.fName;
+                document.querySelector('input[name="mInitial"]').value = helper.mInitial;
+                document.querySelector('input[name="lName"]').value = helper.lName;
+                document.querySelector('input[name="positionAppliedFor"]').value = helper.position;
+                document.querySelector('input[name="destination"]').value = helper.destination;
+                document.querySelector('input[name="address"]').value = helper.address;
+                document.querySelector('input[name="telephoneNo"]').value = helper.telephoneNumber;
+                document.querySelector('input[name="dateOfBirth"]').value = formatDateForInput(helper.dateOfBirth);
+                document.querySelector('input[name="age"]').value = helper.age;
+                document.querySelector('input[name="placeOfBirth"]').value = helper.placeOfBirth;
+                document.querySelector('input[name="nationality"]').value = helper.nationality;
+                document.querySelector('input[name="civilStatus"]').value = helper.civilStatus;
+                document.querySelector('input[name="heightFeet"]').value = helper.heightFeet;
+                document.querySelector('input[name="heightInches"]').value = helper.heightInches;
+                document.querySelector('input[name="weight"]').value = helper.weight;
+                document.querySelector('input[name="sicknessRecord"]').value = helper.sicknessRecord;
+                document.querySelector('input[name="religion"]').value = helper.religion;
+                document.querySelector('input[name="fatherFName"]').value = helper.fatherFName;
+                document.querySelector('input[name="fatherMInitial"]').value = helper.fatherMInitial;
+                document.querySelector('input[name="fatherLName"]').value = helper.fatherLName;
+                document.querySelector('input[name="fatherDateOfBirth"]').value = formatDateForInput(helper.fatherDateOfBirth);
+                document.querySelector('input[name="motherFName"]').value = helper.motherFName;
+                document.querySelector('input[name="motherMInitial"]').value = helper.motherMInitial;
+                document.querySelector('input[name="motherLName"]').value = helper.motherLName;
+                document.querySelector('input[name="motherDateOfBirth"]').value = formatDateForInput(helper.motherDateOfBirth);
+                document.querySelector('input[name="spouseFName"]').value = helper.spouseFName;
+                document.querySelector('input[name="spouseMInitial"]').value = helper.spouseMInitial;
+                document.querySelector('input[name="spouseLName"]').value = helper.spouseLName;
+                document.querySelector('input[name="spouseDateOfBirth"]').value = formatDateForInput(helper.spouseDateOfBirth);
+                document.querySelector('input[name="contactPersonFName"]').value = helper.contactPersonFName;
+                document.querySelector('input[name="contactPersonMInitial"]').value = helper.contactPersonMInitial;
+                document.querySelector('input[name="contactPersonLName"]').value = helper.contactPersonLName;
+                document.querySelector('input[name="contactPersonAddress"]').value = helper.contactPersonAddress;
+                document.querySelector('input[name="contactPersonContactNo"]').value = helper.contactPersonContactNumber;
+                document.querySelector('input[name="contactPersonRelationship"]').value = helper.contactPersonRelationshipWithHelper;
+    
+                helper.children.forEach((child, index) => {
+                    const nameTd = document.getElementById('name');
+                    const ageTd = document.getElementById('age');
+                    const dateOfBirthTd = document.getElementById('dateOfBirth');
+                    const nameInput = document.createElement('input');
+                    nameInput.type = 'text';
+                    nameInput.name = `childName${index + 1}`;
+                    nameInput.value = child.fName;
+                    nameInput.style.border = '1px solid black';
+                    
+                    const ageInput = document.createElement('input');
+                    ageInput.type = 'number';
+                    ageInput.name = `childAge${index + 1}`;
+                    ageInput.value = child.age;
+                    ageInput.style.border = '1px solid black';
+                    
+                    const dateOfBirthInput = document.createElement('input');
+                    dateOfBirthInput.type = 'date';
+                    dateOfBirthInput.name = `childDateOfBirth${index + 1}`;
+                    // Assuming you want to
+                    dateOfBirthInput.value = formatDateForInput(child.dateOfBirth);
+                    dateOfBirthInput.style.border = '1px solid black';
+                    nameTd.appendChild(nameInput);
+                    ageTd.appendChild(ageInput);
+                    dateOfBirthTd.appendChild(dateOfBirthInput);
 
-    // Fetch and display data
-    window.onload = () => {
-        fetchDomesticHelper(helperId);
-    };
+                    document.querySelector('input[name="passportNo"]').value = helper.passportNumber;
+                    document.querySelector('input[name="passportDateOfIssue"]').value = formatDateForInput(helper.passportDateOfIssue);
+                    document.querySelector('input[name="passportDateOfExpiry"]').value = formatDateForInput(helper.passportDateOfExpiry);
+                    document.querySelector('input[name="passportPlaceOfIssue"]').value = helper.passportPlaceOfIssue;
+                    document.querySelector('input[name="nameOfSchool"]').value = helper.nameOfSchool;
+                    document.querySelector('input[name="courseTaken"]').value = helper.courseTaken;
+                    document.querySelector('input[name="yearGraduated"]').value = helper.yearGraduated;
 
-    const fetchDomesticHelper = async (helperId) => {
-        try {
-            const helpers = await window.electronAPI.getDomesticHelper(helperId);
-            console.log("helper in view domestic helper", helpers);
-            displayHelpers(helpers);
-        } catch (error) {
-            console.error('Error fetching domestic helpers:', error);
+                    // Populate employments
+                    helper.employments.forEach((employment, index) => {
+                        const countryTd = document.getElementById('employmentCountry');
+                        const workingPeriodTd = document.getElementById('employmentWorkingPeriod');
+                        const dateTd = document.getElementById('employmentDate');
+                        const workDescriptionTd = document.getElementById('employmentWorkDescription');
+
+                        const countryInput = document.createElement('input');
+                        countryInput.type = 'text';
+                        countryInput.name = `employmentCountry${index + 1}`;
+                        countryInput.value = employment.country;
+                        countryInput.style.border = '1px solid black';
+
+                        const workingPeriodInput = document.createElement('input');
+                        workingPeriodInput.type = 'text';
+                        workingPeriodInput.name = `employmentWorkingPeriod${index + 1}`;
+                        workingPeriodInput.value = employment.workingPeriod;
+                        workingPeriodInput.style.border = '1px solid black';
+
+                        const dateInput = document.createElement('input');
+                        dateInput.type = 'date';
+                        dateInput.name = `employmentDate${index + 1}`;
+                        dateInput.value = formatDateForInput(employment.date);
+                        dateInput.style.border = '1px solid black';
+
+                        const workDescriptionInput = document.createElement('input');
+                        workDescriptionInput.type = 'text';
+                        workDescriptionInput.name = `employmentWorkDescription${index + 1}`;
+                        workDescriptionInput.value = employment.workDescription;
+                        workDescriptionInput.style.border = '1px solid black';
+
+                        countryTd.appendChild(countryInput);
+                        workingPeriodTd.appendChild(workingPeriodInput);
+                        dateTd.appendChild(dateInput);
+                        workDescriptionTd.appendChild(workDescriptionInput);
+                    });
+
+                    document.querySelector('input[name="englishSpeaking"]').checked = helper.englishSpeaking;
+                    document.querySelector('input[name="englishReading"]').checked = helper.englishReading;
+                    document.querySelector('input[name="englishWriting"]').checked = helper.englishWriting;
+                    document.querySelector('input[name="arabicSpeaking"]').checked = helper.arabicSpeaking;
+                    document.querySelector('input[name="arabicReading"]').checked = helper.arabicReading;
+                    document.querySelector('input[name="arabicWriting"]').checked = helper.arabicWriting;
+                    document.querySelector('input[name="filipinoSpeaking"]').checked = helper.filipinoSpeaking;
+                    document.querySelector('input[name="filipinoReading"]').checked = helper.filipinoReading;
+                    document.querySelector('input[name="filipinoWriting"]').checked = helper.filipinoWriting;
+                    document.querySelector('input[name="otherLanguageSpeaking"]').checked = helper.otherLanguageSpeaking;
+                    document.querySelector('input[name="otherLanguageReading"]').checked = helper.otherLanguageReading;
+                    document.querySelector('input[name="otherLanguageWriting"]').checked = helper.otherLanguageWriting;
+                    document.querySelector('input[name="babySitting"]').checked = helper.babySitting;
+                    document.querySelector('input[name="ironing"]').checked = helper.ironing;
+                    document.querySelector('input[name="childrenCare"]').checked = helper.childrenCare;
+                    document.querySelector('input[name="cooking"]').checked = helper.cooking;
+                    document.querySelector('input[name="tutoring"]').checked = helper.tutoring;
+                    document.querySelector('input[name="arabicCooking"]').checked = helper.arabicCooking;
+                    document.querySelector('input[name="disabledCare"]').checked = helper.disabledCare;
+                    document.querySelector('input[name="sewing"]').checked = helper.sewing;
+                    document.querySelector('input[name="cleaning"]').checked = helper.cleaning;
+                    document.querySelector('input[name="computer"]').checked = helper.computer;
+
+                    document.getElementById('universal-edit-button').onclick = () => toggleEdit(true);
+                    document.getElementById('universal-save-button').onclick = () => saveEdits(helpers[0]._id); // Assuming single helper
+                    document.getElementById('universal-delete-button').onclick = () => deleteHelper(helpers[0]._id);
+                })
+            })
         }
-    };
 
-    const displayHelpers = (helpers) => {
-        const helpersList = document.getElementById('helpers-list');
-        helpersList.innerHTML = ''; // Clear any existing rows
+        const formatDateForInput = (date) => {
+            const d = new Date(date);
+            const month = d.getMonth() + 1;
+            const day = d.getDate();
+            const year = d.getFullYear();
+            return `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
+        };
 
-        // If helpers is not an array (i.e., a single object), convert it into an array
-        if (!Array.isArray(helpers)) {
-            helpers = [helpers]; // Wrap the single object into an array
-        }
+        const formatDateForSave = (date) => {
+            const d = new Date(date);
+            const month = d.getMonth() + 1;
+            const day = d.getDate();
+            const year = d.getFullYear();
+            return `${month < 10 ? '0' + month : month}/${day < 10 ? '0' + day : day}/${year}`;
+        };
 
-        // Now helpers will always be an array, even if it's just one helper
-        helpers.forEach(helper => {
-            const row = document.createElement('tr');
+        const toggleEdit = (isEditing) => {
+            const inputs = document.querySelectorAll('#helper-info input');
+            inputs.forEach(input => {
+                input.disabled = !isEditing; // Toggle editability
+            });
+            document.getElementById('universal-edit-button').style.display = isEditing ? 'none' : 'block';
+            document.getElementById('universal-save-button').style.display = isEditing ? 'block' : 'none';
+        };
 
-            // Assuming `fields` is an array of property names to display
-            fields.forEach(field => {
-                const cell = document.createElement('td');
+        const saveEdits = async (helperId) => {
+            // console.log("fullname = ", document.querySelector('input[name="fullName"]').value);
+            // console.log("tel no= ", typeof(Number(document.querySelector('input[name="telephoneNo"]').value)));
 
-                // Check if the field value is boolean and format as "Yes" or "No"
-                if (typeof helper[field] === 'boolean') {
-                    cell.textContent = helper[field] ? 'Yes' : 'No';
-                } else if (field === 'children') {
-                    const children = helper.children || [];
-                    cell.innerHTML = children.length - 1 > 0
-                        ? children.map(child => `Name: ${child.fName} ${child.mInitial} ${child.lName}, 
-                            Age: ${child.age}, DOB: ${child.dateOfBirth}`).join('<br>') 
-                        : [];
-                } else if (field === 'employments') {
-                    const employments = helper.employments || [];
-                    cell.innerHTML = employments.length - 1 > 0
-                        ? employments.map(employment => `Country: ${employment.country}, Working Period: ${employment.workingPeriod}, 
-                            Date: ${employment.date}, Work Description: ${employment.workDescription}`).join('<br>') 
-                        : [];
-                } else if (['dateOfBirth', 'fatherDateOfBirth', 'motherDateOfBirth', 'spouseDateOfBirth', 'passportDateOfIssue', 'passportDateOfExpiry'].includes(field)) {
-                    cell.textContent = formatDate(helper[field]);
-                } else {
-                    cell.textContent = helper[field];
-                }
+            const updatedData = {
+                fName: document.querySelector('input[name="fName"]').value,
+                mInitial: document.querySelector('input[name="mInitial"]').value,
+                lName: document.querySelector('input[name="lName"]').value,
+                position: document.querySelector('input[name="positionAppliedFor"]').value,
+                destination: document.querySelector('input[name="destination"]').value,
+                address: document.querySelector('input[name="address"]').value,
+                telephoneNumber: Number(document.querySelector('input[name="telephoneNo"]').value),
+                dateOfBirth: formatDateForSave(document.querySelector('input[name="dateOfBirth"]').value),
+                age: Number(document.querySelector('input[name="age"]').value),
+                placeOfBirth: document.querySelector('input[name="placeOfBirth"]').value,
+                nationality: document.querySelector('input[name="nationality"]').value,
+                civilStatus: document.querySelector('input[name="civilStatus"]').value,
+                heightFeet: Number(document.querySelector('input[name="heightFeet"]').value),
+                heightInches: Number(document.querySelector('input[name="heightInches"]').value),
+                weight: Number(document.querySelector('input[name="weight"]').value), // Assuming this line was intended
+                sicknessRecord: document.querySelector('input[name="sicknessRecord"]').value,
+                religion: document.querySelector('input[name="religion"]').value,
+                fatherFName: document.querySelector('input[name="fatherFName"]').value,
+                fatherMInitial: document.querySelector('input[name="fatherMInitial"]').value,
+                fatherLName: document.querySelector('input[name="fatherLName"]').value,
+                fatherDateOfBirth: formatDateForSave(document.querySelector('input[name="fatherDateOfBirth"]').value),
+                motherFName: document.querySelector('input[name="motherFName"]').value,
+                motherMInitial: document.querySelector('input[name="motherMInitial"]').value,
+                motherLName: document.querySelector('input[name="motherLName"]').value,
+                motherDateOfBirth: formatDateForSave(document.querySelector('input[name="motherDateOfBirth"]').value),
+                spouseFName: document.querySelector('input[name="spouseFName"]').value,
+                spouseMInitial: document.querySelector('input[name="spouseMInitial"]').value,
+                spouseLName: document.querySelector('input[name="spouseLName"]').value,
+                spouseDateOfBirth: formatDateForSave(document.querySelector('input[name="spouseDateOfBirth"]').value),
+                contactPersonFName: document.querySelector('input[name="contactPersonFName"]').value,
+                contactPersonMInitial: document.querySelector('input[name="contactPersonMInitial"]').value,
+                contactPersonLName: document.querySelector('input[name="contactPersonLName"]').value,
+                contactPersonAddress: document.querySelector('input[name="contactPersonAddress"]').value,
+                contactPersonContactNumber: Number(document.querySelector('input[name="contactPersonContactNo"]').value),
+                contactPersonRelationshipWithHelper: document.querySelector('input[name="contactPersonRelationship"]').value,
+                children: [],
+                passportNumber: document.querySelector('input[name="passportNo"]').value,
+                passportDateOfIssue: formatDateForSave(document.querySelector('input[name="passportDateOfIssue"]').value),
+                passportDateOfExpiry: formatDateForSave(document.querySelector('input[name="passportDateOfExpiry"]').value),
+                passportPlaceOfIssue: document.querySelector('input[name="passportPlaceOfIssue"]').value,
+                nameOfSchool: document.querySelector('input[name="nameOfSchool"]').value,
+                courseTaken: document.querySelector('input[name="courseTaken"]').value,
+                yearGraduated: Number(document.querySelector('input[name="yearGraduated"]').value),
+                employments: [],
+                englishSpeaking: document.querySelector('input[name="englishSpeaking"]').checked,
+                englishReading: document.querySelector('input[name="englishReading"]').checked,
+                englishWriting: document.querySelector('input[name="englishWriting"]').checked,
+                arabicSpeaking: document.querySelector('input[name="arabicSpeaking"]').checked,
+                arabicReading: document.querySelector('input[name="arabicReading"]').checked,
+                arabicWriting: document.querySelector('input[name="arabicWriting"]').checked,
+                filipinoSpeaking: document.querySelector('input[name="filipinoSpeaking"]').checked,
+                filipinoReading: document.querySelector('input[name="filipinoReading"]').checked,
+                filipinoWriting: document.querySelector('input[name="filipinoWriting"]').checked,
+                otherLanguageSpeaking: document.querySelector('input[name="otherLanguageSpeaking"]').checked,
+                otherLanguageReading: document.querySelector('input[name="otherLanguageReading"]').checked,
+                otherLanguageWriting: document.querySelector('input[name="otherLanguageWriting"]').checked,
+                babySitting: document.querySelector('input[name="babySitting"]').checked,
+                ironing: document.querySelector('input[name="ironing"]').checked,
+                childrenCare: document.querySelector('input[name="childrenCare"]').checked,
+                cooking: document.querySelector('input[name="cooking"]').checked,
+                tutoring: document.querySelector('input[name="tutoring"]').checked,
+                arabicCooking: document.querySelector('input[name="arabicCooking"]').checked,
+                disabledCare: document.querySelector('input[name="disabledCare"]').checked,
+                sewing: document.querySelector('input[name="sewing"]').checked,
+                cleaning: document.querySelector('input[name="cleaning"]').checked,
+                computer: document.querySelector('input[name="computer"]').checked,
+            }
 
-                cell.contentEditable = false; // Fields are not editable by default
-                row.appendChild(cell);
+            // Collect dynamic children data
+            const childNameInputs = document.querySelectorAll('input[name^="childName"]');
+            const childAgeInputs = document.querySelectorAll('input[name^="childAge"]');
+            const childDateOfBirthInputs = document.querySelectorAll('input[name^="childDateOfBirth"]');
+            childNameInputs.forEach((input, index) => {
+                updatedData.children.push({
+                    fName: input.value,
+                    age: Number(childAgeInputs[index].value),
+                    dateOfBirth: formatDateForSave(childDateOfBirthInputs[index].value)
+                });
             });
 
-            // Add action buttons
-            const actionsCell = document.createElement('td');
-
-            // Edit Button
-            const editButton = document.createElement('button');
-            editButton.textContent = 'Edit';
-            editButton.className = 'edit-button';
-            editButton.onclick = () => toggleEdit(row, helper._id, editButton, helper);
-            actionsCell.appendChild(editButton);
-
-            // Delete Button
-            const deleteButton = document.createElement('button');
-            deleteButton.textContent = 'Delete';
-            deleteButton.className = 'delete-button';
-            deleteButton.onclick = () => deleteHelper(helper._id, row);
-            actionsCell.appendChild(deleteButton);
-
-            row.appendChild(actionsCell);
-            helpersList.appendChild(row);
-        });
-    };
-
-    const toggleEdit = async (row, id, button, helper) => { // Add helper as a parameter
-        const isEditing = button.textContent === 'Edit';
-        Array.from(row.children).forEach((cell, index) => {
-            if (index < fields.length) {
-                // If the field is a date field, show the date picker
-                if (['dateOfBirth', 'fatherDateOfBirth', 'motherDateOfBirth', 'spouseDateOfBirth', 'passportDateOfIssue', 'passportDateOfExpiry'].includes(fields[index])) {
-                    if (isEditing) {
-                        displayDatePicker(cell, fields[index], cell.textContent.trim()); // Show date picker
-                    }
-                } 
-                    // Toggle editability for non-date, non-boolean fields
-                    cell.contentEditable = isEditing; // Toggle editability for non-date fields
-                    cell.style.backgroundColor = isEditing ? '#fdfd96' : ''; // Highlight editable cells
-            }
-        });
-
-        button.textContent = isEditing ? 'Save' : 'Edit';
-
-        if (!isEditing) {
-            // Save updated data logic
-            const updatedData = {};
-            Array.from(row.children).forEach((cell, index) => {
-                if (index < fields.length) {
-                    let value = cell.textContent.trim();
-
-                    // If the field is a date field, format it to MM/DD/YYYY
-                    if (['dateOfBirth', 'fatherDateOfBirth', 'motherDateOfBirth', 'spouseDateOfBirth', 'passportDateOfIssue', 'passportDateOfExpiry'].includes(fields[index])) {
-                        // If the cell contains an input (the date picker), get the input value
-                        const input = cell.querySelector('input');
-                        if (input) {
-                            value = input.value; // Get the date from the input
-                        }
-
-                        // Convert date to MM/DD/YYYY format for saving and display
-                        value = formatDateForSave(value); 
-                        cell.textContent = value;  // Update cell text with the formatted date
-                    }
-
-                    // Convert Yes/No back to boolean true/false before saving
-                    if (typeof helper[fields[index]] === 'boolean') {
-                        value = value === 'Yes'; // Convert 'Yes' to true and 'No' to false
-                    }
-
-                    updatedData[fields[index]] = value;
-                }
+            // Collect dynamic employments data
+            const employmentCountryInputs = document.querySelectorAll('input[name^="employmentCountry"]');
+            const employmentWorkingPeriodInputs = document.querySelectorAll('input[name^="employmentWorkingPeriod"]');
+            const employmentDateInputs = document.querySelectorAll('input[name^="employmentDate"]');
+            const employmentWorkDescriptionInputs = document.querySelectorAll('input[name^="employmentWorkDescription"]');
+            employmentCountryInputs.forEach((input, index) => {
+                updatedData.employments.push({
+                    country: input.value,
+                    workingPeriod: employmentWorkingPeriodInputs[index].value,
+                    date: formatDateForSave(employmentDateInputs[index].value),
+                    workDescription: employmentWorkDescriptionInputs[index].value
+                });
             });
 
             try {
-                console.log("this is data to be passed", updatedData)
-                await window.electronAPI.updateDomesticHelper(id, updatedData); // Backend update call
+                await window.electronAPI.updateDomesticHelper(helperId, updatedData); // Backend update call
                 alert('Helper updated successfully!');
+                toggleEdit(false); // Switch back to non-edit mode
             } catch (error) {
                 console.error('Error updating helper:', error);
                 alert('Failed to update helper.');
             }
         }
-    };
 
-    const deleteHelper = async (id, row) => {
-        if (confirm('Are you sure you want to delete this helper?')) {
-            try {
-                await window.electronAPI.deleteDomesticHelper(id); // Backend delete call
-                alert('Helper deleted successfully!');
-                row.remove(); // Remove row from table
-            } catch (error) {
-                console.error('Error deleting helper:', error);
-                alert('Failed to delete helper.');
+        const deleteHelper = async (helperId) => {
+            if (confirm('Are you sure you want to delete this helper?')) {
+                try {
+                    await window.electronAPI.deleteDomesticHelper(helperId); // Backend delete call
+                    alert('Helper deleted successfully!');
+                    document.getElementById('helper-info').innerHTML = ''; // Clear the content
+                    document.getElementById('universal-edit-button').style.display = 'none'; // Hide edit button
+                    document.getElementById('universal-save-button').style.display = 'none'; // Hide save button
+                    document.getElementById('universal-delete-button').style.display = 'none'; // Hide delete button
+                } catch (error) {
+                    console.error('Error deleting helper:', error);
+                    alert('Failed to delete helper.');
+                }
             }
-        }
-    };
-</script>
+        };
 
+        // Add event listener for universal delete button
+        document.getElementById('universal-delete-button').onclick = () => deleteHelper(helperId);
+    </script>
 </body>
 </html>

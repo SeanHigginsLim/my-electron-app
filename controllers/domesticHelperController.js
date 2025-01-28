@@ -6,7 +6,9 @@ const domesticHelperController = {
     // Create a domestic helper
     createDomesticHelper: async (req, res) => {
         try {
+            console.log(req.body)
             const newHelper = new domesticHelperSchema(req.body);
+            
             await newHelper.save().then(() => console.log("Domestic helper created successfully!"))
             .catch((err) => console.error("Error creating domestic helper:", err));
             res.status(201).send(newHelper);
@@ -19,6 +21,10 @@ const domesticHelperController = {
     getDomesticHelper: async (req, res) => {
         try {
             const helper = await domesticHelperSchema.findById(req.params.id);
+            
+            // console.log("content ", helper.profileImage.contentType)
+            // console.log("Buffer Length:", helper.profileImage.data);
+            console.log("Base64 Image Data:", helper.profileImage.data.toString("base64"));
             res.send(helper);
         } catch (error) {
             res.status(404).send(error);
@@ -38,6 +44,7 @@ const domesticHelperController = {
     // Update details of a doemstic helper
     updateDomesticHelper: async (req, res) => {
         try {
+            console.log("BODY IS: ", req.body)
             const updatedHelper = await domesticHelperSchema.findByIdAndUpdate(req.params.id, req.body, { new: true });
     
             // Check if the helper was found and updated

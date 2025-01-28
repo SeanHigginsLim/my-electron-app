@@ -1,0 +1,44 @@
+<nav>
+    <ul id="navbar">
+        <li><a href="../homepage.html">Home</a></li>
+        <li><a href="../createDomesticHelper.html">Create Domestic Helper</a></li>
+        <li><a href="../createSkilledWorker.html">Create Skilled Worker</a></li>
+        <li><a href="../domesticHelpers.html">View Domestic Helpers</a></li>
+        <li><a href="../skilledWorkers.html">View Skilled Workers</a></li>
+    </ul>
+</nav>
+
+<style>
+    /* Styling the navbar */
+    nav {
+        background-color: #333;
+        color: white;
+        padding: 10px;
+        margin-bottom: 20px;
+        width: 100%;
+    }
+
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        display: flex; /* Use flexbox for layout */
+        justify-content: space-between; /* Space evenly between items */
+    }
+
+    li {
+        flex: 1; /* Each <li> takes up 1/5 of the space */
+        text-align: center; /* Center text inside the <li> */
+    }
+
+    a {
+        color: white;
+        text-decoration: none;
+        display: block; /* Make the <a> fill the <li> */
+        padding: 10px 0; /* Add padding for better clickability */
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+</style>
