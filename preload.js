@@ -18,5 +18,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     updateSkilledWorker: (workerId, data) => ipcRenderer.invoke('update-skilled-worker', workerId, data),
     deleteSkilledWorker: (workerId) => ipcRenderer.invoke('delete-skilled-worker', workerId),
 
-    createBuffer: (arrayBuffer) => Buffer.from(arrayBuffer) 
+    createBuffer: (arrayBuffer) => Buffer.from(arrayBuffer),
+
+    screenshot: () => ipcRenderer.invoke('screenshot', screenshot),
 });

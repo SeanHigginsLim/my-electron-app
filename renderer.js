@@ -31,52 +31,70 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    document.getElementById('add-child-btn').addEventListener('click', () => {
-        const childContainer = document.getElementById('children-container');
-        const childIndex = childContainer.children.length;
-
-        // Create new child entry fields
-        const childEntry = document.createElement('div');
-        childEntry.classList.add('child-entry');
-        childEntry.innerHTML = `
-            <h3>Child ${childIndex + 1}</h3>
-            <input type="text" id="child-${childIndex}-lName" name="children[${childIndex}].lName" placeholder="Last Name">
-            <input type="text" id="child-${childIndex}-fName" name="children[${childIndex}].fName" placeholder="First Name">
-            <input type="text" id="child-${childIndex}-mInitial" name="children[${childIndex}].mInitial" placeholder="Middle Initial">
-            <input type="number" id="child-${childIndex}-age" name="children[${childIndex}].age" placeholder="Age">
-            <input type="date" id="child-${childIndex}-dateOfBirth" name="children[${childIndex}].dateOfBirth" placeholder="Date of Birth">
-            <button type="button" class="remove-child-btn">Remove Child</button>
-        `;
-        childContainer.appendChild(childEntry);
-
-        // Add event listener to remove button
-        childEntry.querySelector('.remove-child-btn').addEventListener('click', () => {
-            childContainer.removeChild(childEntry);
+    const addChildBtn = document.getElementById('add-child-btn');
+    if (addChildBtn) {
+        addChildBtn.addEventListener('click', () => {
+            const childContainer = document.getElementById('children-container');
+            const childIndex = childContainer.children.length;
+    
+            // Create new child entry fields
+            const childEntry = document.createElement('div');
+            childEntry.classList.add('child-entry');
+            childEntry.innerHTML = `
+                <h3>Child ${childIndex + 1}</h3>
+                <input type="text" id="child-${childIndex}-lName" name="children[${childIndex}].lName" placeholder="Last Name">
+                <input type="text" id="child-${childIndex}-fName" name="children[${childIndex}].fName" placeholder="First Name">
+                <input type="text" id="child-${childIndex}-mInitial" name="children[${childIndex}].mInitial" placeholder="Middle Initial">
+                <input type="number" id="child-${childIndex}-age" name="children[${childIndex}].age" placeholder="Age">
+                <input type="date" id="child-${childIndex}-dateOfBirth" name="children[${childIndex}].dateOfBirth" placeholder="Date of Birth">
+                <button type="button" class="remove-child-btn">Remove Child</button>
+            `;
+            childContainer.appendChild(childEntry);
+    
+            // Add event listener to remove button
+            childEntry.querySelector('.remove-child-btn').addEventListener('click', () => {
+                childContainer.removeChild(childEntry);
+            });
         });
-    });
-
-    document.getElementById('add-employment-btn').addEventListener('click', () => {
-        const employmentContainer = document.getElementById('employments-container');
-        const employmentIndex = employmentContainer.children.length;
-
-        // Create new child entry fields
-        const employmentEntry = document.createElement('div');
-        employmentEntry.classList.add('employment-entry');
-        employmentEntry.innerHTML = `
-            <h3>Employment ${employmentIndex + 1}</h3>
-            <input type="text" id="employment-${employmentIndex}-country" name="employments[${employmentIndex}].country" placeholder="Country">
-            <input type="text" id="employment-${employmentIndex}-workingPeriod" name="employments[${employmentIndex}].workingPeriod" placeholder="Working Period">
-            <input type="date" id="employment-${employmentIndex}-date" name="employments[${employmentIndex}].date" placeholder="Date">
-            <input type="number" id="employment-${employmentIndex}-workDescription" name="employments[${employmentIndex}].workDescription" placeholder="Work Description">
-            <button type="button" class="remove-employment-btn">Remove Employment</button>
-        `;
-        employmentContainer.appendChild(employmentEntry);
-
-        // Add event listener to remove button
-        employmentEntry.querySelector('.remove-employment-btn').addEventListener('click', () => {
-            employmentContainer.removeChild(employmentEntry);
+    }
+    
+    const addEmploymentBtn = document.getElementById('add-employment-btn')
+    if (addEmploymentBtn) {
+        addEmploymentBtn.addEventListener('click', () => {
+            const employmentContainer = document.getElementById('employments-container');
+            const employmentIndex = employmentContainer.children.length;
+    
+            // Create new child entry fields
+            const employmentEntry = document.createElement('div');
+            employmentEntry.classList.add('employment-entry');
+            employmentEntry.innerHTML = `
+                <h3>Employment ${employmentIndex + 1}</h3>
+                <input type="text" id="employment-${employmentIndex}-country" name="employments[${employmentIndex}].country" placeholder="Country">
+                <input type="text" id="employment-${employmentIndex}-workingPeriod" name="employments[${employmentIndex}].workingPeriod" placeholder="Working Period">
+                <input type="date" id="employment-${employmentIndex}-date" name="employments[${employmentIndex}].date" placeholder="Date">
+                <input type="number" id="employment-${employmentIndex}-workDescription" name="employments[${employmentIndex}].workDescription" placeholder="Work Description">
+                <button type="button" class="remove-employment-btn">Remove Employment</button>
+            `;
+            employmentContainer.appendChild(employmentEntry);
+    
+            // Add event listener to remove button
+            employmentEntry.querySelector('.remove-employment-btn').addEventListener('click', () => {
+                employmentContainer.removeChild(employmentEntry);
+            });
         });
-    });
+    }
+
+    const screenshot = document.getElementById('screenshot')
+    if (screenshot) {
+        screenshot.addEventListener('click', async (event) => {
+            console.log("AT SS")
+            event.preventDefault();
+            
+            await window.electronAPI.screenshot().catch((error) => {
+                console.error("Failed to screenshot: ", error);
+            });
+        });
+    }
 
     // Handle form submissions
     const createDomesticHelperForm = document.getElementById('create-domestic-helper-form');
@@ -331,7 +349,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
 
     // const createSkilledWorkerForm = document.getElementById('create-skilled-worker-form');
     // if (createSkilledWorkerForm) {

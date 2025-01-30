@@ -1,7 +1,12 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, desktopCapturer } = require('electron');
 const path = require('path');
 const axios = require('axios');
 const server = require('./server'); // Ensure the server is started
+const fs = require('fs');
+const { PNG } = require('pngjs');
+const sharp = require('sharp');
+// const pixelmatch = require('pixelmatch');
+// const { desktopCapturer } = require('electron')
 
 let mainWindow;
 
@@ -22,7 +27,152 @@ function createWindow() {
         .catch(err => console.error('Failed to load index.html:', err));
     mainWindow.maximize();
     mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.on('did-finish-load', () => {
+    //     // Add any additional initialization here if needed
+    // });
 }
+
+async function captureScrollableScreenshot() {
+    const window = BrowserWindow.getFocusedWindow();
+    if (!window) {
+        throw new Error('No focused window found');
+    }
+
+    const webContents = window.webContents;
+
+    // Scroll to the top of the page
+    await webContents.executeJavaScript(`window.scrollTo(0, 0)`);
+    await new Promise((resolve) => setTimeout(resolve, 200));
+
+    // Get the full content dimensions
+    const { width: pageWidth, height: pageHeight } = await webContents.executeJavaScript(`
+        ({
+            width: document.documentElement.scrollWidth,
+            height: document.documentElement.scrollHeight
+        })
+    `);
+    console.log("Total page dimensions:", { width: pageWidth, height: pageHeight });
+
+    // Get the viewport height
+    const viewportHeight = await webContents.executeJavaScript(`
+        window.innerHeight
+    `);
+    console.log("Viewport height:", viewportHeight);
+
+    const heightToCrop = Math.floor(viewportHeight * 0.11); // Crop 5% of the viewport height
+    const effectiveViewportHeight = viewportHeight - heightToCrop; // Adjusted viewport height after cropping
+    let bufferWidth;
+    const captures = [];
+    let currentY = 0;
+
+    // Capture each viewport
+    while (currentY < pageHeight) {
+        console.log('viewport height: ', viewportHeight);
+        console.log(`Capturing at Y: ${currentY}`);
+
+        await webContents.executeJavaScript(`
+            try {
+                if (!window.__hideScrollbarStyle) {
+                    const style = document.createElement('style');
+                    style.innerHTML = '::-webkit-scrollbar { display: none; }';
+                    document.head.appendChild(style);
+                    window.__hideScrollbarStyle = style;
+                }
+            } catch (error) {
+                console.error("Error hiding scrollbar:", error);
+            }
+        `);
+
+        if (currentY < (pageHeight - viewportHeight)) {
+            console.log("current y: ", currentY)
+            console.log("height to crop: ", heightToCrop)
+            await webContents.executeJavaScript(`window.scrollTo(0, ${currentY})`);
+            await new Promise((resolve) => setTimeout(resolve, 200)); // Allow scroll to finish
+
+            // Capture the current viewport
+            const image = await webContents.capturePage();
+            const buffer = image.toPNG();
+            const metadata = await sharp(buffer).metadata();
+            bufferWidth = metadata;
+
+            // Resize and crop the captured image
+            const croppedBuffer = await sharp(buffer)
+                .extract({
+                    left: 0,
+                    top: heightToCrop, // Start cropping after the specified height
+                    width: metadata.width,
+                    height: viewportHeight + heightToCrop + 3, // Crop the adjusted height
+                })
+                .toBuffer();
+
+            captures.push({ buffer: croppedBuffer, yOffset: currentY });
+
+            // Scroll to the next position
+            currentY += viewportHeight - heightToCrop;
+        } else {
+            console.log("current y 2: ", currentY)
+            // Scroll to the next position
+            // currentY -= (viewportHeight - heightToCrop - ((currentY + viewportHeight - heightToCrop) - pageHeight));
+            console.log((currentY + viewportHeight - heightToCrop) - pageHeight)
+            const heightToCrop2 = heightToCrop + (((currentY + viewportHeight + 9) - pageHeight))
+            console.log("height to crop 2: ", heightToCrop2)
+            await webContents.executeJavaScript(`window.scrollTo(0, ${currentY})`);
+            await new Promise((resolve) => setTimeout(resolve, 200)); // Allow scroll to finish
+
+            // Capture the current viewport
+            const image = await webContents.capturePage();
+            const buffer = image.toPNG();
+            const metadata = await sharp(buffer).metadata();
+            bufferWidth = metadata
+
+            // Resize and crop the captured image
+            const croppedBuffer = await sharp(buffer)
+                .extract({
+                    left: 0,
+                    top: heightToCrop2, // Start cropping after the specified height
+                    width: metadata.width,
+                    height: viewportHeight - heightToCrop2 + heightToCrop + heightToCrop - 27, // Crop the adjusted height
+                })
+                .toBuffer();
+
+            captures.push({ buffer: croppedBuffer, yOffset: currentY });
+
+            // Scroll to the next position
+            currentY += viewportHeight;
+        }
+    }
+
+    // Composite the captured images
+    const compositeHeight = (viewportHeight + heightToCrop + 3) * captures.length - heightToCrop + 3
+
+    const compositeImages = captures.map((capture, index) => ({
+        input: capture.buffer,
+        top: index * (viewportHeight + heightToCrop + 3), // Stack each viewport
+        left: 0,
+    }));
+
+    const finalImage = sharp({
+        create: {
+            width: bufferWidth.width,
+            height: compositeHeight,
+            channels: 4,
+            background: { r: 0, g: 0, b: 0, alpha: 0 },
+        },
+    }).composite(compositeImages);
+    
+    await webContents.executeJavaScript(`
+        if (window.__hideScrollbarStyle) {
+            window.__hideScrollbarStyle.remove();
+            delete window.__hideScrollbarStyle;
+        }
+    `);
+
+    // Save the final image
+    const finalPath = path.join(app.getPath('desktop'), 'screenshot.png');
+    await finalImage.png().toFile(finalPath);
+    console.log(`Screenshot saved to ${finalPath}`);
+}
+
 
 app.on('ready', createWindow);
 
@@ -188,6 +338,21 @@ ipcMain.handle('delete-skilled-worker', async (event, workerId) => {
     } 
 });
 
+// ipcMain.on('screenshot', (event) => {
+//     captureScrollableScreenshot().catch(console.error);
+// });
+ipcMain.handle('screenshot', async () => {
+    await captureScrollableScreenshot().catch(console.error);
+})
+
+// ipcMain.handle('screenshot', (event) => {
+//     try {
+//         captureScrollableScreenshot();
+//     } catch (error) {
+//         console.error(error);
+//         throw error;
+//     }
+// })
 // const { app, BrowserWindow } = require('electron')
 // // include the Node.js 'path' module at the top of file
 // const path = require('node:path')
