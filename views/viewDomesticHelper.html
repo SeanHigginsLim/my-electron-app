@@ -453,7 +453,8 @@
                 helpers = [helpers]; // Wrap single object in array
             }
             helpers.forEach(helper => {
-                console.log("I have my image ", helper.profileImage.data.toString("base64"))
+                console.log("I have my image ")
+                // console.log("I have my image ", helper.profileImage.data.toString("base64"))
                 const base64Image = helper.profileImage.data.toString("base64")
 
                 const imgElement = document.createElement('img');
@@ -525,79 +526,82 @@
                     nameTd.appendChild(nameInput);
                     ageTd.appendChild(ageInput);
                     dateOfBirthTd.appendChild(dateOfBirthInput);
+                });
 
-                    document.querySelector('input[name="passportNo"]').value = helper.passportNumber;
-                    document.querySelector('input[name="passportDateOfIssue"]').value = formatDateForInput(helper.passportDateOfIssue);
-                    document.querySelector('input[name="passportDateOfExpiry"]').value = formatDateForInput(helper.passportDateOfExpiry);
-                    document.querySelector('input[name="passportPlaceOfIssue"]').value = helper.passportPlaceOfIssue;
-                    document.querySelector('input[name="nameOfSchool"]').value = helper.nameOfSchool;
-                    document.querySelector('input[name="courseTaken"]').value = helper.courseTaken;
-                    document.querySelector('input[name="yearGraduated"]').value = helper.yearGraduated;
+                // Populate employments
+                helper.employments.forEach((employment, index) => {
+                    const countryTd = document.getElementById('employmentCountry');
+                    const workingPeriodTd = document.getElementById('employmentWorkingPeriod');
+                    const dateTd = document.getElementById('employmentDate');
+                    const workDescriptionTd = document.getElementById('employmentWorkDescription');
 
-                    // Populate employments
-                    helper.employments.forEach((employment, index) => {
-                        const countryTd = document.getElementById('employmentCountry');
-                        const workingPeriodTd = document.getElementById('employmentWorkingPeriod');
-                        const dateTd = document.getElementById('employmentDate');
-                        const workDescriptionTd = document.getElementById('employmentWorkDescription');
+                    const countryInput = document.createElement('input');
+                    countryInput.type = 'text';
+                    countryInput.name = `employmentCountry${index + 1}`;
+                    countryInput.value = employment.country;
+                    countryInput.style.border = '1px solid black';
 
-                        const countryInput = document.createElement('input');
-                        countryInput.type = 'text';
-                        countryInput.name = `employmentCountry${index + 1}`;
-                        countryInput.value = employment.country;
-                        countryInput.style.border = '1px solid black';
+                    const workingPeriodInput = document.createElement('input');
+                    workingPeriodInput.type = 'text';
+                    workingPeriodInput.name = `employmentWorkingPeriod${index + 1}`;
+                    workingPeriodInput.value = employment.workingPeriod;
+                    workingPeriodInput.style.border = '1px solid black';
 
-                        const workingPeriodInput = document.createElement('input');
-                        workingPeriodInput.type = 'text';
-                        workingPeriodInput.name = `employmentWorkingPeriod${index + 1}`;
-                        workingPeriodInput.value = employment.workingPeriod;
-                        workingPeriodInput.style.border = '1px solid black';
+                    const dateInput = document.createElement('input');
+                    dateInput.type = 'date';
+                    dateInput.name = `employmentDate${index + 1}`;
+                    dateInput.value = formatDateForInput(employment.date);
+                    dateInput.style.border = '1px solid black';
 
-                        const dateInput = document.createElement('input');
-                        dateInput.type = 'date';
-                        dateInput.name = `employmentDate${index + 1}`;
-                        dateInput.value = formatDateForInput(employment.date);
-                        dateInput.style.border = '1px solid black';
+                    const workDescriptionInput = document.createElement('input');
+                    workDescriptionInput.type = 'text';
+                    workDescriptionInput.name = `employmentWorkDescription${index + 1}`;
+                    workDescriptionInput.value = employment.workDescription;
+                    workDescriptionInput.style.border = '1px solid black';
 
-                        const workDescriptionInput = document.createElement('input');
-                        workDescriptionInput.type = 'text';
-                        workDescriptionInput.name = `employmentWorkDescription${index + 1}`;
-                        workDescriptionInput.value = employment.workDescription;
-                        workDescriptionInput.style.border = '1px solid black';
+                    countryTd.appendChild(countryInput);
+                    workingPeriodTd.appendChild(workingPeriodInput);
+                    dateTd.appendChild(dateInput);
+                    workDescriptionTd.appendChild(workDescriptionInput);
+                });
 
-                        countryTd.appendChild(countryInput);
-                        workingPeriodTd.appendChild(workingPeriodInput);
-                        dateTd.appendChild(dateInput);
-                        workDescriptionTd.appendChild(workDescriptionInput);
-                    });
+                console.log(helper.contactPersonRelationshipWithHelper)
+                console.log(document.querySelector('input[name="passportNo"]').value)
+                console.log(helper.passportNumber)
+                document.querySelector('input[name="passportNo"]').value = helper.passportNumber;
+                document.querySelector('input[name="passportDateOfIssue"]').value = formatDateForInput(helper.passportDateOfIssue);
+                document.querySelector('input[name="passportDateOfExpiry"]').value = formatDateForInput(helper.passportDateOfExpiry);
+                document.querySelector('input[name="passportPlaceOfIssue"]').value = helper.passportPlaceOfIssue;
+                document.querySelector('input[name="nameOfSchool"]').value = helper.nameOfSchool;
+                document.querySelector('input[name="courseTaken"]').value = helper.courseTaken;
+                document.querySelector('input[name="yearGraduated"]').value = helper.yearGraduated;
 
-                    document.querySelector('input[name="englishSpeaking"]').checked = helper.englishSpeaking;
-                    document.querySelector('input[name="englishReading"]').checked = helper.englishReading;
-                    document.querySelector('input[name="englishWriting"]').checked = helper.englishWriting;
-                    document.querySelector('input[name="arabicSpeaking"]').checked = helper.arabicSpeaking;
-                    document.querySelector('input[name="arabicReading"]').checked = helper.arabicReading;
-                    document.querySelector('input[name="arabicWriting"]').checked = helper.arabicWriting;
-                    document.querySelector('input[name="filipinoSpeaking"]').checked = helper.filipinoSpeaking;
-                    document.querySelector('input[name="filipinoReading"]').checked = helper.filipinoReading;
-                    document.querySelector('input[name="filipinoWriting"]').checked = helper.filipinoWriting;
-                    document.querySelector('input[name="otherLanguageSpeaking"]').checked = helper.otherLanguageSpeaking;
-                    document.querySelector('input[name="otherLanguageReading"]').checked = helper.otherLanguageReading;
-                    document.querySelector('input[name="otherLanguageWriting"]').checked = helper.otherLanguageWriting;
-                    document.querySelector('input[name="babySitting"]').checked = helper.babySitting;
-                    document.querySelector('input[name="ironing"]').checked = helper.ironing;
-                    document.querySelector('input[name="childrenCare"]').checked = helper.childrenCare;
-                    document.querySelector('input[name="cooking"]').checked = helper.cooking;
-                    document.querySelector('input[name="tutoring"]').checked = helper.tutoring;
-                    document.querySelector('input[name="arabicCooking"]').checked = helper.arabicCooking;
-                    document.querySelector('input[name="disabledCare"]').checked = helper.disabledCare;
-                    document.querySelector('input[name="sewing"]').checked = helper.sewing;
-                    document.querySelector('input[name="cleaning"]').checked = helper.cleaning;
-                    document.querySelector('input[name="computer"]').checked = helper.computer;
+                document.querySelector('input[name="englishSpeaking"]').checked = helper.englishSpeaking;
+                document.querySelector('input[name="englishReading"]').checked = helper.englishReading;
+                document.querySelector('input[name="englishWriting"]').checked = helper.englishWriting;
+                document.querySelector('input[name="arabicSpeaking"]').checked = helper.arabicSpeaking;
+                document.querySelector('input[name="arabicReading"]').checked = helper.arabicReading;
+                document.querySelector('input[name="arabicWriting"]').checked = helper.arabicWriting;
+                document.querySelector('input[name="filipinoSpeaking"]').checked = helper.filipinoSpeaking;
+                document.querySelector('input[name="filipinoReading"]').checked = helper.filipinoReading;
+                document.querySelector('input[name="filipinoWriting"]').checked = helper.filipinoWriting;
+                document.querySelector('input[name="otherLanguageSpeaking"]').checked = helper.otherLanguageSpeaking;
+                document.querySelector('input[name="otherLanguageReading"]').checked = helper.otherLanguageReading;
+                document.querySelector('input[name="otherLanguageWriting"]').checked = helper.otherLanguageWriting;
+                document.querySelector('input[name="babySitting"]').checked = helper.babySitting;
+                document.querySelector('input[name="ironing"]').checked = helper.ironing;
+                document.querySelector('input[name="childrenCare"]').checked = helper.childrenCare;
+                document.querySelector('input[name="cooking"]').checked = helper.cooking;
+                document.querySelector('input[name="tutoring"]').checked = helper.tutoring;
+                document.querySelector('input[name="arabicCooking"]').checked = helper.arabicCooking;
+                document.querySelector('input[name="disabledCare"]').checked = helper.disabledCare;
+                document.querySelector('input[name="sewing"]').checked = helper.sewing;
+                document.querySelector('input[name="cleaning"]').checked = helper.cleaning;
+                document.querySelector('input[name="computer"]').checked = helper.computer;
 
-                    document.getElementById('universal-edit-button').onclick = () => toggleEdit(true);
-                    document.getElementById('universal-save-button').onclick = () => saveEdits(helpers[0]._id); // Assuming single helper
-                    document.getElementById('universal-delete-button').onclick = () => deleteHelper(helpers[0]._id);
-                })
+                document.getElementById('universal-edit-button').onclick = () => toggleEdit(true);
+                document.getElementById('universal-save-button').onclick = () => saveEdits(helpers[0]._id); // Assuming single helper
+                document.getElementById('universal-delete-button').onclick = () => deleteHelper(helpers[0]._id);
             })
         }
 

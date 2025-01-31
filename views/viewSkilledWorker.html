@@ -525,70 +525,70 @@
                     nameTd.appendChild(nameInput);
                     ageTd.appendChild(ageInput);
                     dateOfBirthTd.appendChild(dateOfBirthInput);
+                });
 
-                    document.querySelector('input[name="passportNo"]').value = worker.passportNumber;
-                    document.querySelector('input[name="passportDateOfIssue"]').value = formatDateForInput(worker.passportDateOfIssue);
-                    document.querySelector('input[name="passportDateOfExpiry"]').value = formatDateForInput(worker.passportDateOfExpiry);
-                    document.querySelector('input[name="passportPlaceOfIssue"]').value = worker.passportPlaceOfIssue;
-                    document.querySelector('input[name="nameOfSchool"]').value = worker.nameOfSchool;
-                    document.querySelector('input[name="courseTaken"]').value = worker.courseTaken;
-                    document.querySelector('input[name="yearGraduated"]').value = worker.yearGraduated;
+                // Populate employments
+                worker.employments.forEach((employment, index) => {
+                    const countryTd = document.getElementById('employmentCountry');
+                    const workingPeriodTd = document.getElementById('employmentWorkingPeriod');
+                    const dateTd = document.getElementById('employmentDate');
+                    const workDescriptionTd = document.getElementById('employmentWorkDescription');
 
-                    // Populate employments
-                    worker.employments.forEach((employment, index) => {
-                        const countryTd = document.getElementById('employmentCountry');
-                        const workingPeriodTd = document.getElementById('employmentWorkingPeriod');
-                        const dateTd = document.getElementById('employmentDate');
-                        const workDescriptionTd = document.getElementById('employmentWorkDescription');
+                    const countryInput = document.createElement('input');
+                    countryInput.type = 'text';
+                    countryInput.name = `employmentCountry${index + 1}`;
+                    countryInput.value = employment.country;
+                    countryInput.style.border = '1px solid black';
 
-                        const countryInput = document.createElement('input');
-                        countryInput.type = 'text';
-                        countryInput.name = `employmentCountry${index + 1}`;
-                        countryInput.value = employment.country;
-                        countryInput.style.border = '1px solid black';
+                    const workingPeriodInput = document.createElement('input');
+                    workingPeriodInput.type = 'text';
+                    workingPeriodInput.name = `employmentWorkingPeriod${index + 1}`;
+                    workingPeriodInput.value = employment.workingPeriod;
+                    workingPeriodInput.style.border = '1px solid black';
 
-                        const workingPeriodInput = document.createElement('input');
-                        workingPeriodInput.type = 'text';
-                        workingPeriodInput.name = `employmentWorkingPeriod${index + 1}`;
-                        workingPeriodInput.value = employment.workingPeriod;
-                        workingPeriodInput.style.border = '1px solid black';
+                    const dateInput = document.createElement('input');
+                    dateInput.type = 'date';
+                    dateInput.name = `employmentDate${index + 1}`;
+                    dateInput.value = formatDateForInput(employment.date);
+                    dateInput.style.border = '1px solid black';
 
-                        const dateInput = document.createElement('input');
-                        dateInput.type = 'date';
-                        dateInput.name = `employmentDate${index + 1}`;
-                        dateInput.value = formatDateForInput(employment.date);
-                        dateInput.style.border = '1px solid black';
+                    const workDescriptionInput = document.createElement('input');
+                    workDescriptionInput.type = 'text';
+                    workDescriptionInput.name = `employmentWorkDescription${index + 1}`;
+                    workDescriptionInput.value = employment.workDescription;
+                    workDescriptionInput.style.border = '1px solid black';
 
-                        const workDescriptionInput = document.createElement('input');
-                        workDescriptionInput.type = 'text';
-                        workDescriptionInput.name = `employmentWorkDescription${index + 1}`;
-                        workDescriptionInput.value = employment.workDescription;
-                        workDescriptionInput.style.border = '1px solid black';
+                    countryTd.appendChild(countryInput);
+                    workingPeriodTd.appendChild(workingPeriodInput);
+                    dateTd.appendChild(dateInput);
+                    workDescriptionTd.appendChild(workDescriptionInput);
+                });
 
-                        countryTd.appendChild(countryInput);
-                        workingPeriodTd.appendChild(workingPeriodInput);
-                        dateTd.appendChild(dateInput);
-                        workDescriptionTd.appendChild(workDescriptionInput);
-                    });
+                document.querySelector('input[name="passportNo"]').value = worker.passportNumber;
+                document.querySelector('input[name="passportDateOfIssue"]').value = formatDateForInput(worker.passportDateOfIssue);
+                document.querySelector('input[name="passportDateOfExpiry"]').value = formatDateForInput(worker.passportDateOfExpiry);
+                document.querySelector('input[name="passportPlaceOfIssue"]').value = worker.passportPlaceOfIssue;
+                document.querySelector('input[name="nameOfSchool"]').value = worker.nameOfSchool;
+                document.querySelector('input[name="courseTaken"]').value = worker.courseTaken;
+                document.querySelector('input[name="yearGraduated"]').value = worker.yearGraduated;
 
-                    document.querySelector('input[name="englishSpeaking"]').checked = worker.englishSpeaking;
-                    document.querySelector('input[name="englishReading"]').checked = worker.englishReading;
-                    document.querySelector('input[name="englishWriting"]').checked = worker.englishWriting;
-                    document.querySelector('input[name="arabicSpeaking"]').checked = worker.arabicSpeaking;
-                    document.querySelector('input[name="arabicReading"]').checked = worker.arabicReading;
-                    document.querySelector('input[name="arabicWriting"]').checked = worker.arabicWriting;
-                    document.querySelector('input[name="filipinoSpeaking"]').checked = worker.filipinoSpeaking;
-                    document.querySelector('input[name="filipinoReading"]').checked = worker.filipinoReading;
-                    document.querySelector('input[name="filipinoWriting"]').checked = worker.filipinoWriting;
-                    document.querySelector('input[name="otherLanguageSpeaking"]').checked = worker.otherLanguageSpeaking;
-                    document.querySelector('input[name="otherLanguageReading"]').checked = worker.otherLanguageReading;
-                    document.querySelector('input[name="otherLanguageWriting"]').checked = worker.otherLanguageWriting;
-                    document.querySelector('input[name="otherSkills"]').value = worker.otherSkills;
+                document.querySelector('input[name="englishSpeaking"]').checked = worker.englishSpeaking;
+                document.querySelector('input[name="englishReading"]').checked = worker.englishReading;
+                document.querySelector('input[name="englishWriting"]').checked = worker.englishWriting;
+                document.querySelector('input[name="arabicSpeaking"]').checked = worker.arabicSpeaking;
+                document.querySelector('input[name="arabicReading"]').checked = worker.arabicReading;
+                document.querySelector('input[name="arabicWriting"]').checked = worker.arabicWriting;
+                document.querySelector('input[name="filipinoSpeaking"]').checked = worker.filipinoSpeaking;
+                document.querySelector('input[name="filipinoReading"]').checked = worker.filipinoReading;
+                document.querySelector('input[name="filipinoWriting"]').checked = worker.filipinoWriting;
+                document.querySelector('input[name="otherLanguageSpeaking"]').checked = worker.otherLanguageSpeaking;
+                document.querySelector('input[name="otherLanguageReading"]').checked = worker.otherLanguageReading;
+                document.querySelector('input[name="otherLanguageWriting"]').checked = worker.otherLanguageWriting;
+                document.querySelector('input[name="otherSkills"]').value = worker.otherSkills;
 
-                    document.getElementById('universal-edit-button').onclick = () => toggleEdit(true);
-                    document.getElementById('universal-save-button').onclick = () => saveEdits(workers[0]._id); // Assuming single worker
-                    document.getElementById('universal-delete-button').onclick = () => deleteWorker(workers[0]._id);
-                })
+                document.getElementById('universal-edit-button').onclick = () => toggleEdit(true);
+                document.getElementById('universal-save-button').onclick = () => saveEdits(workers[0]._id); // Assuming single worker
+                document.getElementById('universal-delete-button').onclick = () => deleteWorker(workers[0]._id);
             })
         }
 
