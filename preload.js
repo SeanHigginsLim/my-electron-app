@@ -20,5 +20,5 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
     createBuffer: (arrayBuffer) => Buffer.from(arrayBuffer),
 
-    screenshot: () => ipcRenderer.invoke('screenshot', screenshot),
+    screenshot: (details) => ipcRenderer.invoke('screenshot', details),
 });

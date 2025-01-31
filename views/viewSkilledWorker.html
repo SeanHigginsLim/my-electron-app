@@ -187,9 +187,9 @@
                 <tr>
                     <th>FULL NAME:</th>
                     <td colspan="3" style="border: none; white-space: nowrap;">
-                        <input type="text" name="fName" style="width: auto; display: inline;">
+                        <input type="text" id="fName" name="fName" style="width: auto; display: inline;">
                         <input type="text" name="mInitial" style="width: auto; display: inline;">
-                        <input type="text" name="lName" style="width: auto; display: inline;">
+                        <input type="text" id="lName" name="lName" style="width: auto; display: inline;">
                     </td>
                 </tr>
                 <tr>
@@ -230,7 +230,7 @@
                     <td><input type="text" name="weight"></td>
                 </tr>
                 <tr>
-                    <th>Sickness (Record):</th>
+                    <th>SICKNESS (RECORD):</th>
                     <td><input type="text" name="sicknessRecord"></td>
                     <th>RELIGION:</th>
                     <td><input type="text" name="religion"></td>
@@ -427,6 +427,7 @@
     <button id="universal-edit-button" class="edit-button">Edit</button>
     <button id="universal-save-button" class="edit-button" style="display: none;">Save</button>
     <button id="universal-delete-button" class="delete-button">Delete</button>
+    <button id="screenshot">Screenshot</button>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
@@ -734,6 +735,7 @@
                     document.getElementById('universal-edit-button').style.display = 'none'; // Hide edit button
                     document.getElementById('universal-save-button').style.display = 'none'; // Hide save button
                     document.getElementById('universal-delete-button').style.display = 'none'; // Hide delete button
+                    await window.electronAPI.loadPage('skilledWorkers');
                 } catch (error) {
                     console.error('Error deleting worker:', error);
                     alert('Failed to delete worker.');

@@ -89,8 +89,13 @@ document.addEventListener('DOMContentLoaded', () => {
         screenshot.addEventListener('click', async (event) => {
             console.log("AT SS")
             event.preventDefault();
+            let details = [];
+            const detail1 = document.getElementById('lName').value;
+            const detail2 = document.getElementById('fName').value;
+            details.push(detail1)
+            details.push(detail2)
             
-            await window.electronAPI.screenshot().catch((error) => {
+            await window.electronAPI.screenshot(details).catch((error) => {
                 console.error("Failed to screenshot: ", error);
             });
         });
@@ -212,6 +217,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         console.log('Domestic helper created:', createdHelper.children);
                     } catch (error) {
                         console.error('Error creating domestic helper:', error);
+                        dialog.showMessageBox({
+                            type: 'info',
+                            title: 'Domestic helper created',
+                            message: `Domestic helper created!`,
+                            buttons: ['OK']
+                        });
                     }
                 };
                 reader.readAsDataURL(domesticHelperProfileImageFile);
@@ -220,6 +231,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 try {
                     const createdHelper = await window.electronAPI.createDomesticHelper(helper);
                     console.log('Domestic helper created:', createdHelper.children);
+                    dialog.showMessageBox({
+                        type: 'info',
+                        title: 'Domestic helper created',
+                        message: `Domestic helper created!`,
+                        buttons: ['OK']
+                    });
                 } catch (error) {
                     console.error('Error creating domestic helper:', error);
                 }
@@ -332,9 +349,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Send data to main process
                     try {
                         const createdWorker = await window.electronAPI.createDomesticHelper(worker);
-                        console.log('Domestic helper created:', createdWorker.children);
+                        console.log('Skilled worker created:', createdWorker.children);
+                        dialog.showMessageBox({
+                            type: 'info',
+                            title: 'Skilled worker created',
+                            message: `Skilled worker created!`,
+                            buttons: ['OK']
+                        });
                     } catch (error) {
-                        console.error('Error creating domestic helper:', error);
+                        console.error('Error creating skilled worker:', error);
                     }
                 };
                 reader.readAsDataURL(skilledWorkerProfileImageFile);
@@ -342,9 +365,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 // If no image is uploaded, proceed with other data
                 try {
                     const createdWorker = await window.electronAPI.createDomesticHelper(worker);
-                    console.log('Domestic helper created:', createdWorker.children);
+                    console.log('Skilled worker created:', createdWorker.children);
+                    dialog.showMessageBox({
+                        type: 'info',
+                        title: 'Skilled worker created',
+                        message: `Skilled worker created!`,
+                        buttons: ['OK']
+                    });
                 } catch (error) {
-                    console.error('Error creating domestic helper:', error);
+                    console.error('Error creating skilled worker created:', error);
                 }
             }
         });

@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, desktopCapturer } = require('electron');
+const { app, BrowserWindow, ipcMain, desktopCapturer, dialog } = require('electron');
 const path = require('path');
 const axios = require('axios');
 const server = require('./server'); // Ensure the server is started
@@ -32,11 +32,13 @@ function createWindow() {
     // });
 }
 
-async function captureScrollableScreenshot() {
+async function captureScrollableScreenshot(details) {
     const window = BrowserWindow.getFocusedWindow();
     if (!window) {
         throw new Error('No focused window found');
     }
+
+    console.log("DETAILS", details)
 
     const webContents = window.webContents;
 
@@ -168,9 +170,16 @@ async function captureScrollableScreenshot() {
     `);
 
     // Save the final image
-    const finalPath = path.join(app.getPath('desktop'), 'screenshot.png');
+    const finalPath = path.join(app.getPath('downloads'), `${details[0]}_${details[1]}.png`);
     await finalImage.png().toFile(finalPath);
     console.log(`Screenshot saved to ${finalPath}`);
+    
+    dialog.showMessageBox({
+        type: 'info',
+        title: 'Screenshot Saved',
+        message: `Screenshot saved to:\n${finalPath}`,
+        buttons: ['OK']
+    });
 }
 
 
@@ -341,8 +350,8 @@ ipcMain.handle('delete-skilled-worker', async (event, workerId) => {
 // ipcMain.on('screenshot', (event) => {
 //     captureScrollableScreenshot().catch(console.error);
 // });
-ipcMain.handle('screenshot', async () => {
-    await captureScrollableScreenshot().catch(console.error);
+ipcMain.handle('screenshot', async (event, details) => {
+    await captureScrollableScreenshot(details).catch(console.error);
 })
 
 // ipcMain.handle('screenshot', (event) => {
