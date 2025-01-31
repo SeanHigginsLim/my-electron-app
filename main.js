@@ -25,7 +25,7 @@ async function createWindow() {
 
     await mainWindow.loadFile(path.join(__dirname, 'views', 'homepage.html'))
         .catch(err => console.error('Failed to load index.html:', err));
-    await mainWindow.maximize();
+    mainWindow.maximize();
     // await mainWindow.webContents.openDevTools();
     // mainWindow.webContents.on('did-finish-load', () => {
     //     // Add any additional initialization here if needed
