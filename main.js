@@ -10,7 +10,7 @@ const sharp = require('sharp');
 
 let mainWindow;
 
-function createWindow() {
+async function createWindow() {
     mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
@@ -23,10 +23,10 @@ function createWindow() {
         }
     });
 
-    mainWindow.loadFile(path.join(__dirname, 'views', 'homepage.html'))
+    await mainWindow.loadFile(path.join(__dirname, 'views', 'homepage.html'))
         .catch(err => console.error('Failed to load index.html:', err));
-    mainWindow.maximize();
-    mainWindow.webContents.openDevTools();
+    await mainWindow.maximize();
+    // await mainWindow.webContents.openDevTools();
     // mainWindow.webContents.on('did-finish-load', () => {
     //     // Add any additional initialization here if needed
     // });
