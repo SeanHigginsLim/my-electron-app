@@ -6,21 +6,39 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron .",
-    "build": "electron-builder"
+    "build": "electron-builder",
+    "dist": "electron-builder --win --x64"
   },
   "build": {
     "appId": "com.example.electron-mongodb-app",
+    "productName": "Deltavir",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "**/*"
+    ],
     "win": {
       "target": "nsis",
-      "sign": false
-    },
+      "icon": "Deltavir.png"
+    },  
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Deltavir"
+    },    
     "mac": {
-      "target": "dmg"
+      "target": "dmg",
+      "icon": "assets/icon.icns"
     },
     "linux": {
-      "target": "AppImage"
+      "target": "AppImage",
+      "icon": "assets/icon.png"
     }
-  },
+  },  
   "author": "Sean Higgins Lim",
   "license": "MIT",
   "devDependencies": {

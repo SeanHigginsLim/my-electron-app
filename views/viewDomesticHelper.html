@@ -724,7 +724,7 @@
                     workDescription: employmentWorkDescriptionInputs[index].value
                 });
             });
-
+            
             try {
                 await window.electronAPI.updateDomesticHelper(helperId, updatedData); // Backend update call
                 alert('Helper updated successfully!');
