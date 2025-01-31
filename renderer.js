@@ -215,14 +215,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     try {
                         const createdHelper = await window.electronAPI.createDomesticHelper(helper);
                         console.log('Domestic helper created:', createdHelper.children);
+                        await window.electronAPI.showDomesticHelperCreated()
                     } catch (error) {
                         console.error('Error creating domestic helper:', error);
-                        dialog.showMessageBox({
-                            type: 'info',
-                            title: 'Domestic helper created',
-                            message: `Domestic helper created!`,
-                            buttons: ['OK']
-                        });
                     }
                 };
                 reader.readAsDataURL(domesticHelperProfileImageFile);
@@ -231,12 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 try {
                     const createdHelper = await window.electronAPI.createDomesticHelper(helper);
                     console.log('Domestic helper created:', createdHelper.children);
-                    dialog.showMessageBox({
-                        type: 'info',
-                        title: 'Domestic helper created',
-                        message: `Domestic helper created!`,
-                        buttons: ['OK']
-                    });
+                    await window.electronAPI.showDomesticHelperCreated();
                 } catch (error) {
                     console.error('Error creating domestic helper:', error);
                 }
@@ -350,12 +340,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     try {
                         const createdWorker = await window.electronAPI.createDomesticHelper(worker);
                         console.log('Skilled worker created:', createdWorker.children);
-                        dialog.showMessageBox({
-                            type: 'info',
-                            title: 'Skilled worker created',
-                            message: `Skilled worker created!`,
-                            buttons: ['OK']
-                        });
+                        window.electronAPI.showSkilledWorkerCreated();
                     } catch (error) {
                         console.error('Error creating skilled worker:', error);
                     }
@@ -366,12 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 try {
                     const createdWorker = await window.electronAPI.createDomesticHelper(worker);
                     console.log('Skilled worker created:', createdWorker.children);
-                    dialog.showMessageBox({
-                        type: 'info',
-                        title: 'Skilled worker created',
-                        message: `Skilled worker created!`,
-                        buttons: ['OK']
-                    });
+                    window.electronAPI.showSkilledWorkerCreated();
                 } catch (error) {
                     console.error('Error creating skilled worker created:', error);
                 }

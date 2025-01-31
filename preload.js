@@ -21,4 +21,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     createBuffer: (arrayBuffer) => Buffer.from(arrayBuffer),
 
     screenshot: (details) => ipcRenderer.invoke('screenshot', details),
+    
+    showDomesticHelperCreated: () => ipcRenderer.send('show-domestic-helper-created'),
+    showSkilledWorkerCreated: () => ipcRenderer.send('show-skilled-worker-created'),
 });

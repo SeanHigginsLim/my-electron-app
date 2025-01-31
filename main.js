@@ -228,6 +228,15 @@ ipcMain.handle('view-domestic-helper', async (event, helperId) => {
     }).catch(err => console.error('Failed to load viewDomesticHelper.html:', err));
 });
 
+ipcMain.on('show-domestic-helper-created', (event, arg) => {
+    dialog.showMessageBox({
+        type: 'info',
+        title: 'Domestic helper created',
+        message: `Domestic helper created!`,
+        buttons: ['OK']
+    });
+});
+
 ipcMain.handle('create-domestic-helper', async (event, helper) => { 
     try { 
         const response = await axios.post('http://localhost:3000/api/domesticHelpers', helper); 
@@ -291,6 +300,15 @@ ipcMain.handle('view-skilled-worker', async (event, workerId) => {
             workerId: workerId, // Pass the query parameter as an object
         }
     }).catch(err => console.error('Failed to load viewSkilledWorker.html:', err));
+});
+
+ipcMain.on('show-skilled-worker-created', (event, arg) => {
+    dialog.showMessageBox({
+        type: 'info',
+        title: 'Skilled worker created',
+        message: `Skilled worker created!`,
+        buttons: ['OK']
+    });
 });
 
 ipcMain.handle('create-skilled-worker', async (event, worker) => { 
