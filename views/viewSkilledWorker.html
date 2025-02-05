@@ -224,7 +224,9 @@
                     <th>HEIGHT:</th>
                     <td>
                         <input type="text" name="heightFeet" style="width: 10%;">
+                        '
                         <input type="text" name="heightInches" style="width: 10%;">
+                        "
                     </td>
                     <th>WEIGHT:</th>
                     <td><input type="text" name="weight"></td>
@@ -410,7 +412,8 @@
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I CERTIFY THAT I AM QUALIFIED FOR THE
             POSITION WHICH I AM APPLYING FOR AND ONCE MY EMPLOYER FINDS OUT THAT I AM NOT QUALIFIED TO THE 
             POSITION/JOB I HAVE APPLIED FOR, I AM WILLING TO GO BACK TO THE PHILIPPINES AT MY OWN EXPENSES, 
-            I ALSO
+            I ALSO CERTIFY THAT ALL THE FOREFOING INFORMATION IS CORRECT AND TRUE TO THE BEST OF MY KNOWLEDGE
+            AND BELIEF.
         </div>
 
         <div class="signature-section">
@@ -436,6 +439,14 @@
         
         window.onload = () => {
             fetchSkilledWorker(workerId);
+        };
+
+        function resizeInput(input) {
+            input.style.width = (input.value.length + 1) + "ch";
+        };
+
+        function resizeInputNumber(input) {
+            input.style.width = (input.value.length + 4) + "ch";
         };
     
         const fetchSkilledWorker = async (workerId) => {
@@ -463,6 +474,43 @@
                 imgElement.style.height = '150px';
 
                 document.getElementById('imageContainer').appendChild(imgElement);
+
+                // Array of input field names to update dynamically
+                const inputFields = [
+                    "fName", "mInitial", "lName", "positionAppliedFor", "destination",
+                    "address", "placeOfBirth", "nationality",
+                    "civilStatus", "heightFeet", "heightInches", "weight",
+                    "sicknessRecord", "religion", "fatherFName", "fatherMInitial",
+                    "fatherLName", "motherFName", "motherMInitial", "motherLName",
+                    "spouseFName", "spouseMInitial", "spouseLName",
+                    "contactPersonFName", "contactPersonMInitial", "contactPersonLName",
+                    "contactPersonAddress", "contactPersonRelationship",
+                    "passportNo", "passportPlaceOfIssue", "nameOfSchool", "courseTaken",
+                    "yearGraduated"
+                ];
+
+                const inputNumberFields = [
+                     "telephoneNo", "age", "contactPersonContactNo"
+                ];
+
+                // Update text inputs and resize them
+                inputFields.forEach(field => {
+                    const input = document.querySelector(`input[name="${field}"]`);
+                    if (input) {
+                        input.value = helper[field] || "";
+                        resizeInput(input); // Adjust width dynamically
+                    }
+                });
+
+                // Update text inputs and resize them
+                inputNumberFields.forEach(field => {
+                    const input = document.querySelector(`input[name="${field}"]`);
+                    if (input) {
+                        input.value = helper[field] || "";
+                        console.log("input", input)
+                        resizeInputNumber(input); // Adjust width dynamically
+                    }
+                });
 
                 document.querySelector('input[name="fName"]').value = worker.fName;
                 document.querySelector('input[name="mInitial"]').value = worker.mInitial;
@@ -590,7 +638,7 @@
                 document.getElementById('universal-save-button').onclick = () => saveEdits(workers[0]._id); // Assuming single worker
                 document.getElementById('universal-delete-button').onclick = () => deleteWorker(workers[0]._id);
             })
-        }
+        };
 
         const formatDateForInput = (date) => {
             const d = new Date(date);

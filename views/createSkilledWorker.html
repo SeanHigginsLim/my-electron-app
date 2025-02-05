@@ -77,19 +77,21 @@
             <label for="profileImage">Profile Image:</label>
             <input type="file" id="profileImage" name="profileImage" accept="image/*" required>
         </div>
+        <br>
 
         <!-- Basic Information -->
         <input type="text" name="lName" placeholder="Last Name" required>
         <input type="text" name="fName" placeholder="First Name" required>
-        <input type="text" name="mInitial" placeholder="Middle Initial" required>
+        <input type="text" name="mInitial" placeholder="Middle Name" required>
         <input type="text" name="position" placeholder="Position" required>
         <input type="text" name="destination" placeholder="Destination" required>
         <input type="text" name="address" placeholder="Address" required>
         <input type="number" name="telephoneNumber" placeholder="Telephone Number" required>
+        Date of Birth: 
         <input type="date" name="dateOfBirth" placeholder="Date of Birth" required>
         <input type="number" name="age" placeholder="Age" required>
         <input type="text" name="placeOfBirth" placeholder="Place of Birth" required>
-        <input type="text" name="nationality" placeholder="Nationality" required>
+        <input type="text" name="nationality" placeholder="Nationality" value="Filipino" style="display: none;" required>
         <input type="text" name="civilStatus" placeholder="Civil Status" required>
         <input type="number" name="heightFeet" placeholder="Height (Feet)" required>
         <input type="number" name="heightInches" placeholder="Height (Inches)" required>
@@ -104,6 +106,7 @@
             <input type="text" name="fatherLName" placeholder="Last Name" required>
             <input type="text" name="fatherFName" placeholder="First Name" required>
             <input type="text" name="fatherMInitial" placeholder="Middle Initial" required>
+            Date of Birth: 
             <input type="date" name="fatherDateOfBirth" placeholder="Date of Birth" required>
         </fieldset>
         <fieldset>
@@ -111,6 +114,7 @@
             <input type="text" name="motherLName" placeholder="Last Name" required>
             <input type="text" name="motherFName" placeholder="First Name" required>
             <input type="text" name="motherMInitial" placeholder="Middle Initial" required>
+            Date of Birth: 
             <input type="date" name="motherDateOfBirth" placeholder="Date of Birth" required>
         </fieldset>
         <fieldset>
@@ -118,6 +122,7 @@
             <input type="text" name="spouseLName" placeholder="Last Name" required>
             <input type="text" name="spouseFName" placeholder="First Name" required>
             <input type="text" name="spouseMInitial" placeholder="Middle Initial" required>
+            Date of Birth: 
             <input type="date" name="spouseDateOfBirth" placeholder="Date of Birth" required>
         </fieldset>
 
@@ -145,7 +150,9 @@
         <!-- Passport Information -->
         <h2>Passport Information</h2>
         <input type="text" name="passportNumber" placeholder="Passport Number" required>
+        Date of Issue: 
         <input type="date" name="passportDateOfIssue" placeholder="Date of Issue" required>
+        Date of Expiry: 
         <input type="date" name="passportDateOfExpiry" placeholder="Date of Expiry" required>
         <input type="text" name="passportPlaceOfIssue" placeholder="Place of Issue" required>
 
