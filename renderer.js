@@ -338,7 +338,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     // Send data to main process
                     try {
-                        const createdWorker = await window.electronAPI.createDomesticHelper(worker);
+                        const createdWorker = await window.electronAPI.createSkilledWorker(worker);
                         console.log('Skilled worker created:', createdWorker.children);
                         window.electronAPI.showSkilledWorkerCreated();
                     } catch (error) {
@@ -349,7 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 // If no image is uploaded, proceed with other data
                 try {
-                    const createdWorker = await window.electronAPI.createDomesticHelper(worker);
+                    const createdWorker = await window.electronAPI.createSkilledWorker(worker);
                     console.log('Skilled worker created:', createdWorker.children);
                     window.electronAPI.showSkilledWorkerCreated();
                 } catch (error) {

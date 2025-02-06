@@ -497,7 +497,7 @@
                 inputFields.forEach(field => {
                     const input = document.querySelector(`input[name="${field}"]`);
                     if (input) {
-                        input.value = helper[field] || "";
+                        input.value = worker[field] || "";
                         resizeInput(input); // Adjust width dynamically
                     }
                 });
@@ -506,7 +506,7 @@
                 inputNumberFields.forEach(field => {
                     const input = document.querySelector(`input[name="${field}"]`);
                     if (input) {
-                        input.value = helper[field] || "";
+                        input.value = worker[field] || "";
                         console.log("input", input)
                         resizeInputNumber(input); // Adjust width dynamically
                     }
