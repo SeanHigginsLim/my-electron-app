@@ -179,9 +179,16 @@
 
         <!-- Skills -->
         <h2>Other Skills</h2>
-        <input type="text" name="otherSkills" placeholder="Other Skills" required>
+        <textarea name="otherSkills" placeholder="Other Skills" style="width: 100%; min-height: 100px; resize: none; overflow: hidden; line-height: 1.2;" required oninput="autoResize(this)"></textarea>
         <br><br>
         <button type="submit">Create Skilled Worker</button>
     </form>
+
+    <script>
+        function autoResize(textarea) {
+            textarea.style.height = "auto"; // Reset height
+            textarea.style.height = (textarea.scrollHeight) + "px"; // Set new height based on content
+        }
+    </script>
 </body>
 </html>
