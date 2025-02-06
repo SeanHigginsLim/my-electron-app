@@ -130,7 +130,7 @@
 
     const fetchDomesticHelpers = async () => {
         try {
-            const helpers = await window.electronAPI.getAllDomesticHelpers();
+            const helpers = await window.electronAPI.getAllViewDomesticHelpers();
             displayHelpers(helpers);
         } catch (error) {
             console.error('Error fetching domestic helpers:', error);

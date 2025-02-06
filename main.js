@@ -103,7 +103,7 @@ async function captureScrollableScreenshot(details) {
                     left: 0,
                     top: heightToCrop, // Start cropping after the specified height
                     width: metadata.width,
-                    height: viewportHeight + heightToCrop + 3, // Crop the adjusted height
+                    height: viewportHeight + heightToCrop + 20, // Crop the adjusted height
                 })
                 .toBuffer();
 
@@ -271,6 +271,17 @@ ipcMain.handle('get-all-domestic-helpers', async () => {
     }
 });
 
+// Handle fetching all view domestic helpers
+ipcMain.handle('get-all-view-domestic-helpers', async () => {
+    try {
+        const response = await axios.get('http://localhost:3000/api/viewDomesticHelpers');
+        return response.data; // Return the helpers data to the renderer
+    } catch (error) {
+        console.error('Error fetching view domestic helpers:', error);
+        throw error;
+    }
+});
+
 ipcMain.handle('update-domestic-helper', async (event, helperId, data) => { 
     try {
         console.log("update domestic helper data ", data)
@@ -341,6 +352,17 @@ ipcMain.handle('get-all-skilled-workers', async () => {
         return response.data; // Return the workers data to the renderer
     } catch (error) {
         console.error('Error fetching skilled workers:', error);
+        throw error;
+    }
+});
+
+// Handle fetching all view skilled workers
+ipcMain.handle('get-all-view-skilled-workers', async () => {
+    try {
+        const response = await axios.get('http://localhost:3000/api/viewSkilledWorkers');
+        return response.data; // Return the workers data to the renderer
+    } catch (error) {
+        console.error('Error fetching view skilled workers:', error);
         throw error;
     }
 });

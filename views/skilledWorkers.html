@@ -130,7 +130,7 @@
 
     const fetchSkilledWorkers = async () => {
         try {
-            const workers = await window.electronAPI.getAllSkilledWorkers();
+            const workers = await window.electronAPI.getAllViewSkilledWorkers();
             displayWorkers(workers);
         } catch (error) {
             console.error('Error fetching skilled workers:', error);

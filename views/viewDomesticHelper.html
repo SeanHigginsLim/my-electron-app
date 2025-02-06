@@ -678,10 +678,13 @@
             const inputs = document.querySelectorAll('#helper-info input');
             inputs.forEach(input => {
                 input.disabled = !isEditing; // Toggle editability
+                input.style.border = isEditing ? '2px solid #000' : 'none'; // Add or remove border
             });
             document.getElementById('universal-edit-button').style.display = isEditing ? 'none' : 'block';
             document.getElementById('universal-save-button').style.display = isEditing ? 'block' : 'none';
         };
+
+        toggleEdit(false);
 
         const saveEdits = async (helperId) => {
             // console.log("fullname = ", document.querySelector('input[name="fullName"]').value);

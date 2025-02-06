@@ -35,6 +35,16 @@ const skilledWorkerController = {
             res.status(404).send(error);
         }
     },
+
+    // Get details of a skilled worker
+    getAllViewSkilledWorkers: async (req, res) =>{
+        try {
+            const workers = await skilledWorkerSchema.find().select('fName lName mInitial _id'); // This will fetch all the workers
+            res.send(workers);
+        } catch (error) {
+            res.status(404).send(error);
+        }
+    },
     
     // Update details of a skilled worker
     updateSkilledWorker: async (req, res) => {

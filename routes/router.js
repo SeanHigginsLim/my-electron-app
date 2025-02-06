@@ -8,12 +8,14 @@ const skilledWorkerController = require('../controllers/skilledWorkerController'
 
 // Define routes and map them to controller functions
 router.get('/domesticHelpers', domesticHelperController.getAllDomesticHelpers);
+router.get('/viewDomesticHelpers', domesticHelperController.getAllViewDomesticHelpers);
 router.post('/domesticHelpers', upload.single('profileImage'), domesticHelperController.createDomesticHelper);
 router.get('/domesticHelpers/:id', domesticHelperController.getDomesticHelper);
 router.put('/domesticHelpers/:id', domesticHelperController.updateDomesticHelper);
 router.delete('/domesticHelpers/:id', domesticHelperController.deleteDomesticHelper);
 
 router.get('/skilledWorkers', skilledWorkerController.getAllSkilledWorkers);
+router.get('/viewSkilledWorkers', skilledWorkerController.getAllViewSkilledWorkers);
 router.post('/skilledWorkers', upload.single('profileImage'), skilledWorkerController.createSkilledWorker);
 router.get('/skilledWorkers/:id', skilledWorkerController.getSkilledWorker);
 router.put('/skilledWorkers/:id', skilledWorkerController.updateSkilledWorker);

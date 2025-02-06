@@ -12,6 +12,11 @@ const formatDate = (date) => {
     return new Date(date).toLocaleDateString('en-US');
 };
 
+// Custom setter function to handle empty strings
+function setDefaultOnEmpty(value, defaultValue) {
+    return value === '' ? undefined : value;
+}
+
 // Create a new domestic helper object
 const domesticHelperSchema = new mongoose.Schema({
     helperID: { type: Number, unique: true },
@@ -50,10 +55,10 @@ const domesticHelperSchema = new mongoose.Schema({
     motherFName: { type: String, required: true },
     motherMInitial: { type: String, required: true },
     motherDateOfBirth: { type: String, set: formatDate, required: true },
-    spouseLName: { type: String, required: true },
-    spouseFName: { type: String, required: true },
-    spouseMInitial: { type: String, required: true },
-    spouseDateOfBirth: { type: String, set: formatDate, required: true },
+    spouseLName: { type: String, required: false, default: "N/A", set: function(value) { return setDefaultOnEmpty(value, "N/A"); } },
+    spouseFName: { type: String, required: false, default: "N/A", set: function(value) { return setDefaultOnEmpty(value, "N/A"); } },
+    spouseMInitial: { type: String, required: false, default: "N/A", set: function(value) { return setDefaultOnEmpty(value, "N/A"); } },
+    spouseDateOfBirth: { type: String, set: formatDate, required: false },
     contactPersonLName: { type: String, required: true },
     contactPersonFName: { type: String, required: true },
     contactPersonMInitial: { type: String, required: true },

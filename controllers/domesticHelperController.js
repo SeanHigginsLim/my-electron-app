@@ -41,6 +41,16 @@ const domesticHelperController = {
         }
     },
 
+    // Get details of all domestic helpers
+    getAllViewDomesticHelpers: async (req, res) =>{
+        try {
+            const helpers = await domesticHelperSchema.find().select('fName lName mInitial _id'); // This will fetch all the helpers
+            res.send(helpers);
+        } catch (error) {
+            res.status(404).send(error);
+        }
+    },
+
     // Update details of a doemstic helper
     updateDomesticHelper: async (req, res) => {
         try {
