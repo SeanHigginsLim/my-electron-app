@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron .",
-    "build": "electron-builder",
+    "build": "electron-builder --win --ia32",
     "dist": "electron-builder --win --x64"
   },
   "build": {
@@ -19,9 +19,17 @@
       "**/*"
     ],
     "win": {
-      "target": "nsis",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "ia32",
+            "x64"
+          ]
+        }
+      ],
       "icon": "Deltavir.png"
-    },  
+    },
     "nsis": {
       "oneClick": false,
       "perMachine": true,
@@ -29,7 +37,7 @@
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "shortcutName": "Deltavir"
-    },    
+    },
     "mac": {
       "target": "dmg",
       "icon": "assets/icon.icns"
@@ -38,7 +46,7 @@
       "target": "AppImage",
       "icon": "assets/icon.png"
     }
-  },  
+  },
   "author": "Sean Higgins Lim",
   "license": "MIT",
   "devDependencies": {
